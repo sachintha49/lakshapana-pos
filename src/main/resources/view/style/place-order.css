@@ -1,0 +1,28 @@
+.placeOrderImage {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-image: url("/assests/placeOrder.jpg");
+    /*-fx-background-size: 900,700;*/
+}
+
+/*#lblTotalCss {
+    -fx-text-fill: white;
+    -fx-font-size: 20;
+}*/
+
+#textFieldPlaceOrder {
+    -fx-text-fill: white;
+    -fx-font-weight: 700;/*
+    -fx-border-color: black;*/
+    -fx-border-radius: 50px;
+
+
+}
+
+#placeOrderTime{
+    -fx-text-fill: white;
+}
+
+#placeOrderTitle {
+    -fx-text-fill: white;
+}

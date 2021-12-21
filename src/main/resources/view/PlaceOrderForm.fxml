@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: white;" styleClass="placeOrderImage" stylesheets="@style/place-order.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.thilina.pos_stationary.controller.PlaceOrderFormController">
+   <children>
+      <Label id="placeOrderTitle" layoutX="307.0" layoutY="20.0" text="Place Order" textFill="#dd0000" underline="true">
+         <font>
+            <Font name="Serif Bold" size="36.0" />
+         </font></Label>
+      <JFXTextField id="textFieldPlaceOrder" fx:id="txtSelectItem" alignment="TOP_CENTER" labelFloat="true" layoutX="29.0" layoutY="125.0" prefHeight="26.0" prefWidth="631.0" promptText="Select Item">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></JFXTextField>
+      <Button fx:id="btnAddItem" layoutX="677.0" layoutY="199.0" mnemonicParsing="false" onAction="#btnAddItemToBillOnAtion" prefHeight="57.0" prefWidth="170.0" style="-fx-background-color: #2e8b57;" text="Add Item" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <TableView fx:id="tblPlaceOrder" layoutX="29.0" layoutY="341.0" prefHeight="232.0" prefWidth="818.0">
+        <columns>
+          <TableColumn fx:id="colItemCode" prefWidth="87.0" text="Item Code" />
+          <TableColumn fx:id="colItemName" prefWidth="243.0" text="Item Name" />
+            <TableColumn fx:id="colQty" prefWidth="62.0" text="Qty." />
+            <TableColumn fx:id="colUnitPrice" prefWidth="109.0" text="Unit Price" />
+            <TableColumn fx:id="colDiscount" prefWidth="108.0" text="Discount" />
+            <TableColumn fx:id="colTotal" prefWidth="109.0" text="Total" />
+            <TableColumn fx:id="colDeleteBtn" prefWidth="97.0" text="Delete" />
+        </columns>
+      </TableView>
+      <JFXTextField id="textFieldPlaceOrder" fx:id="txtQty" alignment="TOP_CENTER" labelFloat="true" layoutX="29.0" layoutY="226.0" prefHeight="26.0" prefWidth="307.0" promptText="Quantity">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></JFXTextField>
+      <JFXTextField id="textFieldPlaceOrder" fx:id="txtUnitPrice" alignment="TOP_CENTER" labelFloat="true" layoutX="365.0" layoutY="177.0" prefHeight="26.0" prefWidth="295.0" promptText="Unit Price">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></JFXTextField>
+      <Line endX="618.0" layoutX="191.0" layoutY="97.0" opacity="0.15" startX="-100.0" />
+      <Label layoutX="22.0" layoutY="662.0" text="NET AMOUNT       :">
+         <font>
+            <Font name="Serif Regular" size="22.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblTotalPriceOfOrder" layoutX="276.0" layoutY="661.0" text="00.00">
+         <font>
+            <Font name="Serif Regular" size="22.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnPlaceOrder" layoutX="591.0" layoutY="589.0" mnemonicParsing="false" onAction="#placeOrderBtnOnAction" prefHeight="85.0" prefWidth="256.0" style="-fx-background-color: #dc143c;" text="Place Order" textFill="WHITE">
+         <font>
+            <Font name="System Bold Italic" size="24.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Label id="placeOrderTime" fx:id="lblOrderDate" layoutX="590.0" layoutY="30.0" text="2021-03-23">
+         <font>
+            <Font name="System Bold" size="25.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="57.0" fitWidth="64.0" layoutX="29.0" layoutY="13.0" onMouseClicked="#backToHomeOnAction" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assests/home.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <JFXTextField id="textFieldPlaceOrder" fx:id="txtItemCode" alignment="TOP_CENTER" labelFloat="true" layoutX="29.0" layoutY="177.0" prefHeight="26.0" prefWidth="307.0" promptText="Item Code">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></JFXTextField>
+      <JFXTextField id="textFieldPlaceOrder" fx:id="txtDiscount" alignment="TOP_CENTER" labelFloat="true" layoutX="368.0" layoutY="226.0" prefHeight="26.0" prefWidth="295.0" promptText="Discount">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></JFXTextField>
+      <Label layoutX="22.0" layoutY="585.0" prefHeight="36.0" prefWidth="223.0" text="GROSS AMOUNT  :">
+         <font>
+            <Font name="Serif Regular" size="22.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblGrossAmount" layoutX="273.0" layoutY="593.0" text="00.00">
+         <font>
+            <Font name="Serif Regular" size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="20.0" layoutY="625.0" text="TOTAL DISCOUNT :">
+         <font>
+            <Font name="Serif Regular" size="22.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblTotalDiscount" layoutX="273.0" layoutY="625.0" text="00.00">
+         <font>
+            <Font name="Serif Regular" size="22.0" />
+         </font>
+      </Label>
+      <JFXTextField id="textFieldPlaceOrder" fx:id="txtCustomerCash" alignment="CENTER" labelFloat="true" layoutX="29.0" layoutY="286.0" prefHeight="36.0" prefWidth="307.0" promptText="Cash" />
+      <Line endX="618.0" layoutX="167.0" layoutY="274.0" opacity="0.15" startX="-100.0" />
+      <JFXButton fx:id="btnRefreshID" layoutX="760.0" layoutY="138.0" onAction="#btnRefreshOnAction" prefHeight="44.0" prefWidth="63.0" style="-fx-background-color: yellow;" text="Refresh">
+         <font>
+            <Font name="Lohit Telugu" size="12.0" />
+         </font>
+      </JFXButton>
+   </children>
+</AnchorPane>

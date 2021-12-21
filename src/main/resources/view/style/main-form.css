@@ -1,0 +1,23 @@
+.mainImage {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-image: url("/assests/mainPageImage.jpg");
+}
+
+
+.button {
+    -fx-background-color: blue;
+    -fx-text-fill: white;
+}
+
+#titleMainPage{
+    -fx-text-fill: white;
+}
+
+#optionTextId {
+    -fx-text-fill: white;
+}
+
+#mainOptionsImages{
+    -fx-background-color: white;
+}
