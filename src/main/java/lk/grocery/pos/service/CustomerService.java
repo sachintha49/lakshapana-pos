@@ -1,10 +1,10 @@
-package lk.thilina.pos_stationary.service;
+package lk.grocery.pos.service;
 
-import lk.thilina.pos_stationary.db.DBConnection;
-import lk.thilina.pos_stationary.dto.CustomerDTO;
-import lk.thilina.pos_stationary.exception.DuplicateIdentifierException;
-import lk.thilina.pos_stationary.exception.FailedOperationException;
-import lk.thilina.pos_stationary.exception.NotFountException;
+import lk.grocery.pos.db.DBConnection;
+import lk.grocery.pos.dto.CustomerDTO;
+import lk.grocery.pos.exception.DuplicateIdentifierException;
+import lk.grocery.pos.exception.FailedOperationException;
+import lk.grocery.pos.exception.NotFountException;
 
 
 import java.sql.*;

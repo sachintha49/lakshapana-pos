@@ -1,15 +1,11 @@
-package lk.thilina.pos_stationary;
+package lk.grocery.pos;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import lk.thilina.pos_stationary.controller.MainPageFormController;
+import lk.grocery.pos.controller.MainPageFormController;
 
 import java.io.IOException;
 

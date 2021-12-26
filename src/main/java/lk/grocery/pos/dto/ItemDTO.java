@@ -1,4 +1,4 @@
-package lk.thilina.pos_stationary.dto;
+package lk.grocery.pos.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

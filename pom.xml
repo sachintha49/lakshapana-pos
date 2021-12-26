@@ -58,7 +58,7 @@
                             <transformers>
                                 <transformer implementation=
                                                      "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>lk.thilina.pos_stationary.AppInitializer</mainClass>
+                                    <mainClass>lk.grocery.pos.AppInitializer</mainClass>
                                 </transformer>
                             </transformers>
                             <filters>

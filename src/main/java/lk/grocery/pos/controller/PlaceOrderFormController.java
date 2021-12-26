@@ -1,4 +1,4 @@
-package lk.thilina.pos_stationary.controller;
+package lk.grocery.pos.controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
@@ -22,15 +22,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import lk.thilina.pos_stationary.db.DBConnection;
-import lk.thilina.pos_stationary.dto.ItemDTO;
-import lk.thilina.pos_stationary.tm.OrderItemDetailTM;
-import lk.thilina.pos_stationary.util.PrintBillDetails;
+import lk.grocery.pos.util.PrintBillDetails;
+import lk.grocery.pos.db.DBConnection;
+import lk.grocery.pos.dto.ItemDTO;
+import lk.grocery.pos.tm.OrderItemDetailTM;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
-import net.sf.jasperreports.view.JasperViewer;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;

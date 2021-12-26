@@ -1,16 +1,16 @@
-package lk.thilina.pos_stationary.util;
+package lk.grocery.pos.dto;
 
 import java.io.Serializable;
 
-public class CustomerTM implements Serializable {
-    String id;
-    String name;
-    String address;
+public class CustomerDTO implements Serializable {
+    private String id;
+    private String name;
+    private String address;
 
-    public CustomerTM() {
+    public CustomerDTO() {
     }
 
-    public CustomerTM(String id, String name, String address) {
+    public CustomerDTO(String id, String name, String address) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -42,7 +42,7 @@ public class CustomerTM implements Serializable {
 
     @Override
     public String toString() {
-        return "CustomerTM{" +
+        return "CustomerDTO{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +

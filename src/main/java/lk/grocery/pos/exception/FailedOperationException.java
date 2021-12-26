@@ -1,4 +1,4 @@
-package lk.thilina.pos_stationary.exception;
+package lk.grocery.pos.exception;
 
 public class FailedOperationException extends Exception{
     public FailedOperationException() {

@@ -13,7 +13,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: white;" styleClass="placeOrderImage" stylesheets="@style/place-order.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.thilina.pos_stationary.controller.PlaceOrderFormController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: white;" styleClass="placeOrderImage" stylesheets="@style/place-order.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.grocery.pos.controller.PlaceOrderFormController">
    <children>
       <Label id="placeOrderTitle" layoutX="307.0" layoutY="20.0" text="Place Order" textFill="#dd0000" underline="true">
          <font>

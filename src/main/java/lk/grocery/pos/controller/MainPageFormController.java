@@ -1,4 +1,4 @@
-package lk.thilina.pos_stationary.controller;
+package lk.grocery.pos.controller;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;

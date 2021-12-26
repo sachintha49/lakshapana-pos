@@ -1,4 +1,4 @@
-package lk.thilina.pos_stationary.db;
+package lk.grocery.pos.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

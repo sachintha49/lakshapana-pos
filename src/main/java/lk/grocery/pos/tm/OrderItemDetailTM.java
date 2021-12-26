@@ -1,4 +1,4 @@
-package lk.thilina.pos_stationary.tm;
+package lk.grocery.pos.tm;
 
 import javafx.scene.control.Button;
 
