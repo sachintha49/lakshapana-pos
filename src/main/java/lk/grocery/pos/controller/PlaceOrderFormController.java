@@ -30,6 +30,7 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.view.JasperViewer;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
@@ -391,8 +392,8 @@ public boolean validDiscount(){
             params.put("balance", calculateBalance());
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(billItems));
-            //JasperViewer.viewReport(jasperPrint, false);
-            JasperPrintManager.printReport(jasperPrint, false);
+            JasperViewer.viewReport(jasperPrint, false);
+            //JasperPrintManager.printReport(jasperPrint, false);
 
             //tblPlaceOrder.getItems().clear();
         } else if (alert.getResult() == ButtonType.CANCEL) {
