@@ -10,6 +10,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="FMBindumathi" level="project" />
+    <orderEntry type="library" name="Iskoola Pota" level="project" />
     <orderEntry type="library" name="Maven: com.jfoenix:jfoenix:8.0.7" level="project" />
     <orderEntry type="library" name="Maven: org.controlsfx:controlsfx:8.40.14" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:8.0.21" level="project" />
@@ -32,7 +34,5 @@
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.12.2" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.12.2" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.12.2" level="project" />
-    <orderEntry type="library" name="FMBindumathi" level="project" />
-    <orderEntry type="library" name="Iskoola Pota" level="project" />
   </component>
 </module>

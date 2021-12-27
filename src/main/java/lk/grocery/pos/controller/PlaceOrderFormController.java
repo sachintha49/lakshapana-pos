@@ -60,7 +60,7 @@ public class PlaceOrderFormController {
     public Label lblTotalPriceOfOrder;
     public Label lblOrderDate;
     public Label lblOrderId;
-    public JFXTextField txtItemCode;
+    public JFXTextField txtItemName;
     public Button btnAddItem;
     public TableColumn colDiscount;
     public JFXTextField txtDiscount;
@@ -168,8 +168,8 @@ public class PlaceOrderFormController {
 
             if (selectedOrderDetail != null) {
                 /*btnAddItem.setText("Update");*/
-                txtSelectItem.setText(selectedOrderDetail.getItemName());
-                txtItemCode.setText(selectedOrderDetail.getItemCode());
+                txtSelectItem.setText(selectedOrderDetail.getItemCode());
+                txtItemName.setText(selectedOrderDetail.getItemName());
                 txtQty.setText(String.valueOf(selectedOrderDetail.getQuantity()));
                 txtUnitPrice.setText(String.valueOf(selectedOrderDetail.getUnitPrice()));
             } else {
@@ -186,7 +186,7 @@ public class PlaceOrderFormController {
         txtDiscount.setOnMouseClicked(e -> txtDiscount.selectAll());
 
         txtUnitPrice.setEditable(false);
-        txtItemCode.setEditable(false);
+        txtItemName.setEditable(false);
 
     }
 
@@ -220,14 +220,14 @@ public class PlaceOrderFormController {
                 .reduce((accumulator, element) -> accumulator.add(element)).orElse(new BigDecimal(0)).setScale(2));
     }
 
-    private void fillItemDetailInField(String itemName) {
-        if (itemName.isEmpty()) {
+    private void fillItemDetailInField(String itemCode) {
+        if (itemCode.isEmpty()) {
             new Alert(Alert.AlertType.WARNING, "Please check the input is correct", ButtonType.OK).show();
             return;
         }
         try {
-            final PreparedStatement prst = DBConnection.getInstance().getConnection().prepareStatement("SELECT * FROM item WHERE description = ?");
-            prst.setString(1, itemName);
+            final PreparedStatement prst = DBConnection.getInstance().getConnection().prepareStatement("SELECT * FROM item WHERE code = ?");
+            prst.setString(1, itemCode);
             ResultSet rstSet = prst.executeQuery();
             rstSet.next();
 
@@ -236,7 +236,7 @@ public class PlaceOrderFormController {
                     rstSet.getBigDecimal("unit_price"),
                     rstSet.getInt("qty_on_hand"));
 
-            txtItemCode.setText(currentSelectedItem.getCode());
+            txtItemName.setText(currentSelectedItem.getDescription());
             txtUnitPrice.setText(String.valueOf(currentSelectedItem.getUnitPrice()));
         } catch (SQLException | ClassNotFoundException e) {
             new Alert(Alert.AlertType.ERROR, "Please enter correct name of the item").show();
@@ -279,7 +279,7 @@ public class PlaceOrderFormController {
         txtSelectItem.clear();
         txtQty.clear();
         txtUnitPrice.clear();
-        txtItemCode.clear();
+        txtItemName.clear();
         txtDiscount.setText("0.00");
     }
 public boolean validDiscount(){
@@ -312,7 +312,7 @@ public boolean validDiscount(){
             return;
         }
 
-        int rowIndex = isAlreadyExists(txtItemCode.getText());
+        int rowIndex = isAlreadyExists(txtItemName.getText());
 
         if (rowIndex == -1) {
             OrderItemDetailTM orderItem = new OrderItemDetailTM();

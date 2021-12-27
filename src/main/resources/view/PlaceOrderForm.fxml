@@ -82,7 +82,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <JFXTextField id="textFieldPlaceOrder" fx:id="txtItemCode" alignment="TOP_CENTER" labelFloat="true" layoutX="29.0" layoutY="177.0" prefHeight="26.0" prefWidth="307.0" promptText="Item Code">
+      <JFXTextField id="textFieldPlaceOrder" fx:id="txtItemName" alignment="TOP_CENTER" labelFloat="true" layoutX="29.0" layoutY="177.0" prefHeight="26.0" prefWidth="307.0" promptText="Item Name">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor></JFXTextField>
