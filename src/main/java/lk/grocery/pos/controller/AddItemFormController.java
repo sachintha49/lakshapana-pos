@@ -41,6 +41,7 @@ public class AddItemFormController {
     public JFXTextField txtQuantityOnHand;
     public JFXButton btnAddNewItemID;
     public ComboBox cmbUnitType;
+    public TableColumn colUnitType;
 
     /* ape class eka purawatama customerService class eka ona nisa methana declare karnawa*/
     ItemService itemService = new ItemService();

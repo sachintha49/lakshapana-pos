@@ -37,8 +37,9 @@
          <columns>
             <TableColumn fx:id="colItemCode" prefWidth="110.0" text="Item Code" />
             <TableColumn fx:id="colItemDescription" prefWidth="260.0" text="Description" />
-            <TableColumn fx:id="colItemUnitPrice" prefWidth="202.0" text="Unit Price" />
-            <TableColumn fx:id="colQuantityOnHand" prefWidth="190.0" text="Quantity on hand" />
+            <TableColumn fx:id="colItemUnitPrice" prefWidth="150.0" text="Unit Price" />
+            <TableColumn fx:id="colQuantityOnHand" prefWidth="136.0" text="Quantity on hand" />
+            <TableColumn fx:id="colUnitType" prefWidth="105.0" text="Unit Type" />
          </columns>
       </TableView>
       <JFXButton layoutX="14.0" layoutY="14.0" onAction="#btnBackFromAddItemFormOnAction" prefHeight="52.0" prefWidth="123.0" style="-fx-background-color: red;" text="&lt; Back" textFill="WHITE">
