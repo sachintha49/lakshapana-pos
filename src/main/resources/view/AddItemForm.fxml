@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -15,7 +16,7 @@
             <Font name="System Bold Italic" size="34.0" />
          </font></Label>
       <JFXTextField fx:id="txtItemCode" layoutX="172.0" layoutY="66.0" prefHeight="26.0" prefWidth="574.0" promptText="Item Code" />
-      <JFXTextField fx:id="txtItemDescription" layoutX="172.0" layoutY="111.0" prefHeight="26.0" prefWidth="574.0" promptText="Item Description" />
+      <JFXTextField fx:id="txtItemDescription" layoutX="172.0" layoutY="111.0" prefHeight="26.0" prefWidth="425.0" promptText="Item Description" />
       <JFXTextField fx:id="txtItemUnitPrice" layoutX="173.0" layoutY="164.0" prefHeight="26.0" prefWidth="574.0" promptText="Item Unit Price" />
       <JFXButton fx:id="saveBtnId" layoutX="156.0" layoutY="261.0" onAction="#btnSaveOnAtion" prefHeight="52.0" prefWidth="153.0" style="-fx-border-color: yellow; -fx-background-color: green;" text="Save" textFill="WHITE">
          <font>
@@ -46,5 +47,6 @@
          </font>
       </JFXButton>
       <JFXTextField fx:id="txtQuantityOnHand" layoutX="172.0" layoutY="214.0" prefHeight="26.0" prefWidth="574.0" promptText="Quantity On Hand" />
+      <ComboBox fx:id="cmbUnitType" layoutX="623.0" layoutY="114.0" prefHeight="29.0" prefWidth="123.0" promptText="Unit Type" />
    </children>
 </AnchorPane>

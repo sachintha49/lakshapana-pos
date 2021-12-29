@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -39,6 +40,7 @@ public class AddItemFormController {
     public TableColumn colQuantityOnHand;
     public JFXTextField txtQuantityOnHand;
     public JFXButton btnAddNewItemID;
+    public ComboBox cmbUnitType;
 
     /* ape class eka purawatama customerService class eka ona nisa methana declare karnawa*/
     ItemService itemService = new ItemService();
@@ -83,6 +85,8 @@ public class AddItemFormController {
         /*txtCustomerAddress.setOnAction(event -> saveBtnId.fire());*/
 
         loadAllItem();
+
+        cmbUnitType.getItems().addAll("default","g","ml");
 
     }
 
