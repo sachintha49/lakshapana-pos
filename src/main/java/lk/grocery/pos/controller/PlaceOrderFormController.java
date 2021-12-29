@@ -1,5 +1,6 @@
 package lk.grocery.pos.controller;
 
+import com.fasterxml.jackson.databind.util.ISO8601Utils;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import javafx.animation.Animation;
@@ -81,11 +82,12 @@ public class PlaceOrderFormController {
         TextFields.bindAutoCompletion(txtSelectItem, hitProducts);
 
         txtSelectItem.setOnKeyPressed(new EventHandler<KeyEvent>() {
+
             @Override
             public void handle(KeyEvent event) {
 
                 if (event.getCode() == KeyCode.ENTER) {
-                    fillItemDetailInField(txtSelectItem.getText());
+                    fillItemDetailInField(txtSelectItem.getText().substring(0,4));
                     txtQty.requestFocus();
                 } else if (event.getCode() == KeyCode.SPACE) {
                     txtCustomerCash.requestFocus();
@@ -248,10 +250,12 @@ public class PlaceOrderFormController {
     private List<String> getHitProducts() {
         List<String> list = new ArrayList<>();
         try {
-            PreparedStatement pstm = DBConnection.getInstance().getConnection().prepareStatement("SELECT description FROM item");
+            PreparedStatement pstm = DBConnection.getInstance().getConnection().prepareStatement("SELECT code , description FROM item");
             ResultSet rst = pstm.executeQuery();
             while (rst.next()) {
-                list.add(rst.getString("description"));
+                String itemCode = rst.getString("code");
+                String description = rst.getString("description");
+                list.add(itemCode + " " + description);
             }
 
         } catch (SQLException e) {
@@ -282,13 +286,14 @@ public class PlaceOrderFormController {
         txtItemName.clear();
         txtDiscount.setText("0.00");
     }
-public boolean validDiscount(){
+
+    public boolean validDiscount() {
         int qty = Integer.parseInt(txtQty.getText());
         double unitPrice = Double.parseDouble(txtUnitPrice.getText());
         double dis = Double.parseDouble(txtDiscount.getText());
         double itemPrice = unitPrice * qty;
-        return dis < itemPrice ? false :true;
-}
+        return dis < itemPrice ? false : true;
+    }
 
     public void btnAddItemToBillOnAtion(ActionEvent actionEvent) {
         if (txtDiscount.getText().trim().isEmpty()) {
@@ -306,7 +311,7 @@ public boolean validDiscount(){
             new Alert(Alert.AlertType.ERROR, "Please enter correct discount").show();
             clearAllFields();
             return;
-        }else if (validDiscount()){
+        } else if (validDiscount()) {
             new Alert(Alert.AlertType.ERROR, "Please enter correct less discount").show();
             clearAllFields();
             return;
@@ -390,6 +395,7 @@ public boolean validDiscount(){
             params.put("totDis", lblTotalDiscount.getText());
             params.put("cash", customerPaidCash());
             params.put("balance", calculateBalance());
+            params.put("nanayakkaraStoreName", "නානායක්කාර ස්ටොර්ස්");
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(billItems));
             JasperViewer.viewReport(jasperPrint, false);
