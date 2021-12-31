@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -34,8 +35,8 @@
       <TableView fx:id="tblPlaceOrder" layoutX="29.0" layoutY="341.0" prefHeight="232.0" prefWidth="818.0">
         <columns>
           <TableColumn fx:id="colItemCode" prefWidth="87.0" text="Item Code" />
-          <TableColumn fx:id="colItemName" prefWidth="243.0" text="Item Name" />
-            <TableColumn fx:id="colQty" prefWidth="62.0" text="Qty." />
+          <TableColumn fx:id="colItemName" prefWidth="216.0" text="Item Name" />
+            <TableColumn fx:id="colQty" prefWidth="89.0" text="Qty." />
             <TableColumn fx:id="colUnitPrice" prefWidth="109.0" text="Unit Price" />
             <TableColumn fx:id="colDiscount" prefWidth="108.0" text="Discount" />
             <TableColumn fx:id="colTotal" prefWidth="109.0" text="Total" />
@@ -112,10 +113,11 @@
       </Label>
       <JFXTextField id="textFieldPlaceOrder" fx:id="txtCustomerCash" alignment="CENTER" labelFloat="true" layoutX="29.0" layoutY="286.0" prefHeight="36.0" prefWidth="307.0" promptText="Cash" />
       <Line endX="618.0" layoutX="167.0" layoutY="274.0" opacity="0.15" startX="-100.0" />
-      <JFXButton fx:id="btnRefreshID" layoutX="760.0" layoutY="138.0" onAction="#btnRefreshOnAction" prefHeight="44.0" prefWidth="63.0" style="-fx-background-color: yellow;" text="Refresh">
+      <JFXButton fx:id="btnRefreshID" layoutX="823.0" layoutY="94.0" onAction="#btnRefreshOnAction" prefHeight="44.0" prefWidth="63.0" style="-fx-background-color: yellow;" text="Refresh">
          <font>
             <Font name="Lohit Telugu" size="12.0" />
          </font>
       </JFXButton>
+      <TextField fx:id="txtUnitType" layoutX="673.0" layoutY="125.0" prefHeight="26.0" prefWidth="92.0" />
    </children>
 </AnchorPane>
