@@ -147,10 +147,11 @@ public class PlaceOrderFormController {
         tblPlaceOrder.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("itemName"));
         tblPlaceOrder.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("quantity"));
         tblPlaceOrder.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
-        tblPlaceOrder.getColumns().get(4).setCellValueFactory(new PropertyValueFactory<>("discount"));
-        tblPlaceOrder.getColumns().get(5).setCellValueFactory(new PropertyValueFactory<>("total"));
+        tblPlaceOrder.getColumns().get(4).setCellValueFactory(new PropertyValueFactory<>("unitType"));
+        tblPlaceOrder.getColumns().get(5).setCellValueFactory(new PropertyValueFactory<>("discount"));
+        tblPlaceOrder.getColumns().get(6).setCellValueFactory(new PropertyValueFactory<>("total"));
 
-        TableColumn<OrderItemDetailTM, Button> deleteBtn = (TableColumn<OrderItemDetailTM, Button>) tblPlaceOrder.getColumns().get(6);
+        TableColumn<OrderItemDetailTM, Button> deleteBtn = (TableColumn<OrderItemDetailTM, Button>) tblPlaceOrder.getColumns().get(7);
 
         deleteBtn.setCellValueFactory(param -> {
             /*System.out.println(param);*/
@@ -238,10 +239,13 @@ public class PlaceOrderFormController {
             currentSelectedItem = new ItemDTO(rstSet.getString("code"),
                     rstSet.getString("description"),
                     rstSet.getBigDecimal("unit_price"),
-                    rstSet.getInt("qty_on_hand"));
+                    rstSet.getInt("qty_on_hand"),
+                    rstSet.getString("unit_type")
+            );
 
             txtItemName.setText(currentSelectedItem.getDescription());
             txtUnitPrice.setText(String.valueOf(currentSelectedItem.getUnitPrice()));
+            txtUnitType.setText(currentSelectedItem.getUnitType());
         } catch (SQLException | ClassNotFoundException e) {
             new Alert(Alert.AlertType.ERROR, "Please enter correct name of the item").show();
             e.printStackTrace();
@@ -319,13 +323,13 @@ public class PlaceOrderFormController {
             return;
         }
 
-        int rowIndex = isAlreadyExists(txtItemName.getText());
-
+        int rowIndex = isAlreadyExists(currentSelectedItem.getCode());
         if (rowIndex == -1) {
             OrderItemDetailTM orderItem = new OrderItemDetailTM();
             orderItem.setItemCode(currentSelectedItem.getCode());
             orderItem.setItemName(currentSelectedItem.getDescription());
             orderItem.setQuantity(Integer.parseInt(txtQty.getText().trim()));
+            orderItem.setUnitType(currentSelectedItem.getUnitType());
             orderItem.setUnitPrice(currentSelectedItem.getUnitPrice().setScale(2));
             orderItem.setDiscount(new BigDecimal(txtDiscount.getText()).setScale(2));
             orderItem.setTotal(printTotalPerItem(txtQty.getText(),
@@ -336,6 +340,7 @@ public class PlaceOrderFormController {
             tblPlaceOrder.setItems(orderItemList);
             clearAllFields();
         } else {
+            clearAllFields();
             new Alert(Alert.AlertType.WARNING, "The item is already existing", ButtonType.OK).show();
 
         }

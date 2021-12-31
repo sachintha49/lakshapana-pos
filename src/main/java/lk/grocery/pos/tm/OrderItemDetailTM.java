@@ -10,21 +10,22 @@ public class OrderItemDetailTM implements Serializable {
     private String itemName;
     private int quantity;
     private BigDecimal unitPrice;
+    private String unitType;
     private BigDecimal discount;
     private BigDecimal total;
 
     public OrderItemDetailTM() {
     }
 
-    public OrderItemDetailTM(String itemCode, String itemName, int quantity, BigDecimal unitPrice, BigDecimal discount, BigDecimal total) {
+    public OrderItemDetailTM(String itemCode, String itemName, int quantity, BigDecimal unitPrice, String unitType, BigDecimal discount, BigDecimal total) {
         this.itemCode = itemCode;
         this.itemName = itemName;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
+        this.unitType = unitType;
         this.discount = discount;
         this.total = total;
     }
-
     public String getItemCode() {
         return itemCode;
     }
@@ -57,6 +58,14 @@ public class OrderItemDetailTM implements Serializable {
         this.unitPrice = unitPrice;
     }
 
+    public String getUnitType() {
+        return unitType;
+    }
+
+    public void setUnitType(String unitType) {
+        this.unitType = unitType;
+    }
+
     public BigDecimal getDiscount() {
         return discount;
     }
@@ -80,6 +89,7 @@ public class OrderItemDetailTM implements Serializable {
                 ", itemName='" + itemName + '\'' +
                 ", quantity=" + quantity +
                 ", unitPrice=" + unitPrice +
+                ", unitType='" + unitType + '\'' +
                 ", discount=" + discount +
                 ", total=" + total +
                 '}';

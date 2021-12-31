@@ -51,6 +51,7 @@ public class AddItemFormController {
         tblViewItem.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("description"));
         tblViewItem.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("unit_price"));
         tblViewItem.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("qty_on_hand"));
+        tblViewItem.getColumns().get(4).setCellValueFactory(new PropertyValueFactory<>("unit_type"));
 
        /* txtCustomerId.setEditable(false);
         txtCustomerName.setEditable(false);
@@ -74,7 +75,7 @@ public class AddItemFormController {
                 txtItemDescription.setText(newValue.getDescription());
                 txtItemUnitPrice.setText(String.valueOf(newValue.getUnit_price()));
                 txtQuantityOnHand.setText(String.valueOf(newValue.getQty_on_hand()));
-
+                cmbUnitType.setValue(newValue.getUnit_type());
                 txtItemCode.setDisable(false);
                 txtItemDescription.setDisable(false);
                 txtItemUnitPrice.setDisable(false);
@@ -87,8 +88,8 @@ public class AddItemFormController {
 
         loadAllItem();
 
-        cmbUnitType.getItems().addAll("default","g","ml");
-
+        cmbUnitType.getItems().addAll("none","g","ml");
+        cmbUnitType.getSelectionModel().selectFirst();
     }
 
     private void loadAllItem() throws FailedOperationException {
@@ -107,7 +108,7 @@ public class AddItemFormController {
             /* eka piyawarakin agahannath puuwan*/
             List<ItemDTO> listItem = itemService.findAllItems();
             listItem.forEach(dto -> tblViewItem.getItems().add(new ItemTM(dto.getCode(),
-                    dto.getDescription(),dto.getUnitPrice().setScale(2),dto.getQtyOnHand())));
+                    dto.getDescription(),dto.getUnitPrice().setScale(2),dto.getQtyOnHand(),dto.getUnitType())));
         } catch (FailedOperationException e) {
             new Alert(Alert.AlertType.ERROR,e.getMessage()).show();
             throw e;
@@ -126,6 +127,7 @@ public class AddItemFormController {
 
     public void btnSaveOnAtion(ActionEvent actionEvent) throws FailedOperationException {
         String code = txtItemCode.getText();
+        String unitType = cmbUnitType.getSelectionModel().getSelectedItem().toString();
         String description = txtItemDescription.getText();
         String unitPrice = txtItemUnitPrice.getText();
         String qtyOnHand = txtQuantityOnHand.getText();
@@ -145,8 +147,8 @@ public class AddItemFormController {
             if (saveBtnId.getText().equalsIgnoreCase("Save")) {
                 /* Todo: we need to save this in our database first then only the table should be updated */
                 try {
-                    itemService.saveItem(new ItemDTO(code,description,new BigDecimal(unitPrice),Integer.parseInt(qtyOnHand)));
-                    tblViewItem.getItems().add(new ItemTM(code, description, new BigDecimal(unitPrice),Integer.parseInt(qtyOnHand)));
+                    itemService.saveItem(new ItemDTO(code,description,new BigDecimal(unitPrice),Integer.parseInt(qtyOnHand),unitType));
+                    tblViewItem.getItems().add(new ItemTM(code, description, new BigDecimal(unitPrice),Integer.parseInt(qtyOnHand),unitType));
                 } catch (DuplicateIdentifierException e) {
                     new Alert(Alert.AlertType.ERROR,e.getMessage()).show();
                 }
@@ -154,11 +156,12 @@ public class AddItemFormController {
                 /* Todo: first of all we need to update the DB, if that success */
 
                 try {
-                    itemService.updateItem(new ItemDTO(code, description, new BigDecimal(unitPrice),Integer.parseInt(qtyOnHand)));
+                    itemService.updateItem(new ItemDTO(code, description, new BigDecimal(unitPrice),Integer.parseInt(qtyOnHand),unitType));
                     ItemTM selectedItem = tblViewItem.getSelectionModel().getSelectedItem();
                     selectedItem.setDescription(description);
                     selectedItem.setUnit_price(new BigDecimal(unitPrice));
                     selectedItem.setQty_on_hand(Integer.parseInt(qtyOnHand));
+                    selectedItem.setUnit_type(unitType);
                     tblViewItem.refresh();
                 } catch (FailedOperationException e) {
                     e.printStackTrace();

@@ -8,15 +8,17 @@ public class ItemTM implements Serializable {
     private String description;
     private BigDecimal unit_price;
     private int qty_on_hand;
+    private String unit_type;
 
     public ItemTM() {
     }
 
-    public ItemTM(String code, String description, BigDecimal unit_price, int qty_on_hand) {
+    public ItemTM(String code, String description, BigDecimal unit_price, int qty_on_hand, String unit_type) {
         this.code = code;
         this.description = description;
         this.unit_price = unit_price;
         this.qty_on_hand = qty_on_hand;
+        this.unit_type = unit_type;
     }
 
     public String getCode() {
@@ -51,6 +53,14 @@ public class ItemTM implements Serializable {
         this.qty_on_hand = qty_on_hand;
     }
 
+    public String getUnit_type() {
+        return unit_type;
+    }
+
+    public void setUnit_type(String unit_type) {
+        this.unit_type = unit_type;
+    }
+
     @Override
     public String toString() {
         return "ItemTM{" +
@@ -58,6 +68,7 @@ public class ItemTM implements Serializable {
                 ", description='" + description + '\'' +
                 ", unit_price=" + unit_price +
                 ", qty_on_hand=" + qty_on_hand +
+                ", unit_type='" + unit_type + '\'' +
                 '}';
     }
 }
