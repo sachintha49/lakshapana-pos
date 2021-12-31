@@ -71,6 +71,7 @@ public class PlaceOrderFormController {
     public JFXTextField txtCustomerCash;
     public JFXButton btnRefreshID;
     public TextField txtUnitType;
+    public TableColumn colUnitType;
 
     ItemDTO currentSelectedItem;
     ObservableList<OrderItemDetailTM> orderItemList = FXCollections.observableArrayList();
