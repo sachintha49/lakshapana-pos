@@ -88,7 +88,7 @@ public class AddItemFormController {
 
         loadAllItem();
 
-        cmbUnitType.getItems().addAll("none","g","ml");
+        cmbUnitType.getItems().addAll("none","Kg","l");
         cmbUnitType.getSelectionModel().selectFirst();
     }
 

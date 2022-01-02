@@ -53,11 +53,12 @@ public class ItemService {
             if (!existItem(itemDTO.getCode())){
                 throw new NotFountException("There is no such item associated with "+itemDTO.getCode());
             }
-            PreparedStatement pstm = connection.prepareStatement("UPDATE item SET description=?, unit_price=?, qty_on_hand=? WHERE code=?");
+            PreparedStatement pstm = connection.prepareStatement("UPDATE item SET description=?, unit_price=?, qty_on_hand=?, unit_type=? WHERE code=?");
             pstm.setString(1,itemDTO.getDescription());
             pstm.setBigDecimal(2,itemDTO.getUnitPrice());
             pstm.setInt(3,itemDTO.getQtyOnHand());
-            pstm.setString(4,itemDTO.getCode());
+            pstm.setString(4,itemDTO.getUnitType());
+            pstm.setString(5,itemDTO.getCode());
             pstm.executeUpdate();
         } catch (SQLException e) {
             throw new FailedOperationException("Failed to update the item"+ itemDTO.getCode(),e);
