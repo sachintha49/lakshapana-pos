@@ -28,21 +28,21 @@ public class MainPageFormController {
     public void addCustomerOnAction(MouseEvent mouseEvent) throws IOException {
         Stage stage = (Stage) root.getScene().getWindow();
         stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/view/AddCustomerForm.fxml"))));
-        stage.setResizable(false);
+        //stage.setResizable(false);
         stage.centerOnScreen();
     }
 
     public void addItemOnAction(MouseEvent mouseEvent) throws IOException {
         Stage stage = (Stage) root.getScene().getWindow();
         stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/view/AddItemForm.fxml"))));
-        stage.setResizable(false);
+        //stage.setResizable(false);
         stage.centerOnScreen();
     }
 
     public void placeOrderOnAction(MouseEvent mouseEvent) throws IOException {
         Stage stage = (Stage) root.getScene().getWindow();
         stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/view/PlaceOrderForm.fxml"))));
-        stage.setResizable(false);
+        //stage.setResizable(false);
         stage.centerOnScreen();
     }
 

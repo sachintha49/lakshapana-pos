@@ -1,7 +1,10 @@
 package lk.grocery.pos.dto;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Blob;
 
 public class ItemDTO implements Serializable {
     private String code;
@@ -71,6 +74,4 @@ public class ItemDTO implements Serializable {
     public void setUnitType(String unitType) {
         this.unitType = unitType;
     }
-
-
 }

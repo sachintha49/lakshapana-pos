@@ -12,7 +12,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import lk.grocery.pos.exception.DuplicateIdentifierException;
 import lk.grocery.pos.exception.NotFountException;
@@ -20,10 +24,16 @@ import lk.grocery.pos.dto.ItemDTO;
 import lk.grocery.pos.exception.FailedOperationException;
 import lk.grocery.pos.service.ItemService;
 import lk.grocery.pos.tm.ItemTM;
+import org.jfree.ui.ExtensionFileFilter;
 
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.math.BigDecimal;
+import java.net.URI;
 import java.net.URL;
+import java.sql.Blob;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddItemFormController {
@@ -42,9 +52,15 @@ public class AddItemFormController {
     public JFXButton btnAddNewItemID;
     public ComboBox cmbUnitType;
     public TableColumn colUnitType;
+    public ImageView imageView;
+    public JFXButton btnImage;
+    public Blob filePath;
+    public int fileLength;
+    public TableColumn colImagePath;
 
     /* ape class eka purawatama customerService class eka ona nisa methana declare karnawa*/
     ItemService itemService = new ItemService();
+    List<String> imageFile;
 
     public void initialize() throws FailedOperationException {
         tblViewItem.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("code"));
@@ -52,6 +68,12 @@ public class AddItemFormController {
         tblViewItem.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("unit_price"));
         tblViewItem.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("qty_on_hand"));
         tblViewItem.getColumns().get(4).setCellValueFactory(new PropertyValueFactory<>("unit_type"));
+        tblViewItem.getColumns().get(5).setCellValueFactory(new PropertyValueFactory<>("image_path"));
+
+        imageFile = new ArrayList<>();
+        imageFile.add("*.png");
+        imageFile.add("*.jpg");
+        imageFile.add("*.jpeg");
 
        /* txtCustomerId.setEditable(false);
         txtCustomerName.setEditable(false);
@@ -125,13 +147,13 @@ public class AddItemFormController {
         Platform.runLater(() -> primaryStage.sizeToScene());
     }
 
-    public void btnSaveOnAtion(ActionEvent actionEvent) throws FailedOperationException {
+    public void btnSaveOnAtion(ActionEvent actionEvent) throws FailedOperationException, FileNotFoundException {
         String code = txtItemCode.getText();
         String unitType = cmbUnitType.getSelectionModel().getSelectedItem().toString();
         String description = txtItemDescription.getText();
         String unitPrice = txtItemUnitPrice.getText();
         String qtyOnHand = txtQuantityOnHand.getText();
-
+        //InputStream itemImage = new FileInputStream(imagePath.getPath());
         /* Regular expression eken kiyanne: capital A to Z and simple a - z akuru thiyenne puluwan saha space thiyenne puluwan and aduma tharame eka akurak hari thiyenna one*/
        /* if (!description.matches("[A-Za-z ]+")) {
             new Alert(Alert.AlertType.ERROR, "Invalid description!").show();
@@ -147,6 +169,7 @@ public class AddItemFormController {
             if (saveBtnId.getText().equalsIgnoreCase("Save")) {
                 /* Todo: we need to save this in our database first then only the table should be updated */
                 try {
+                    System.out.println(filePath + " filepath");
                     itemService.saveItem(new ItemDTO(code,description,new BigDecimal(unitPrice),Integer.parseInt(qtyOnHand),unitType));
                     tblViewItem.getItems().add(new ItemTM(code, description, new BigDecimal(unitPrice),Integer.parseInt(qtyOnHand),unitType));
                 } catch (DuplicateIdentifierException e) {
@@ -249,4 +272,19 @@ public class AddItemFormController {
             return String.format("C%03d", newCustomerID);*/
     }
 
+    public void btnSingleImage(ActionEvent actionEvent) throws IOException {
+        FileChooser fc = new FileChooser();
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("image files", imageFile));
+        File f = fc.showOpenDialog(null);
+        if(f != null){
+            Image image = new Image(f.toURI().toString());
+            if (filePath == null) {
+                fileLength = (int) f.length();
+                //filePath = f.toURI().getPath();
+                System.out.println(filePath);
+            }
+            imageView.setImage(image);
+        }
+
+    }
 }

@@ -6,6 +6,8 @@ import lk.grocery.pos.exception.DuplicateIdentifierException;
 import lk.grocery.pos.exception.NotFountException;
 import lk.grocery.pos.exception.FailedOperationException;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +106,7 @@ public class ItemService {
             ResultSet rst = stm.executeQuery("SELECT *  FROM item");
 
             while (rst.next()){
-                itemList.add(new ItemDTO(rst.getString("code"),rst.getString("description"),rst.getBigDecimal("unit_price"),rst.getInt("qty_on_hand"),rst.getString("unit_type")));
+               itemList.add(new ItemDTO(rst.getString("code"),rst.getString("description"),rst.getBigDecimal("unit_price"),rst.getInt("qty_on_hand"),rst.getString("unit_type")));
             }
 
             return itemList;
@@ -127,4 +129,5 @@ public class ItemService {
             throw new FailedOperationException("Failed to generate a new ID",e);
         }
     }
+
 }
