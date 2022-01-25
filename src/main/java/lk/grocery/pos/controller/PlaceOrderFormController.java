@@ -33,6 +33,7 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.view.JasperViewer;
 import org.controlsfx.control.textfield.TextFields;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -414,7 +415,6 @@ public class PlaceOrderFormController {
             params.put("totDis", lblTotalDiscount.getText());
             params.put("cash", customerPaidCash());
             params.put("balance", calculateBalance());
-            params.put("nanayakkaraStoreName", "නානායක්කාර ස්ටොර්ස්");
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(billItems));
             JasperViewer.viewReport(jasperPrint, false);

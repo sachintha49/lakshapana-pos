@@ -21,8 +21,8 @@ public class AppInitializer extends Application {
         Parent root = FXMLLoader.load(this.getClass().getResource("/view/MainPageForm.fxml"));
         Scene mainScene = new Scene(root);
         primaryStage.setScene(mainScene);
-        primaryStage.setResizable(false);
-        primaryStage.setTitle("Java FX Backup POS");
+        //stage.setResizable(false);
+        primaryStage.setTitle("Nanayakkara POS");
         primaryStage.centerOnScreen();
 
         primaryStage.show();

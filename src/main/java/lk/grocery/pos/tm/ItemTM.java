@@ -1,7 +1,9 @@
 package lk.grocery.pos.tm;
 
+import java.io.FileInputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Blob;
 
 public class ItemTM implements Serializable {
     private String code;
