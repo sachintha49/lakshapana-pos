@@ -1,30 +1,29 @@
 package lk.grocery.pos.tm;
 
-import javafx.scene.control.Button;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 public class OrderItemDetailTM implements Serializable {
     private String itemCode;
     private String itemName;
-    private int quantity;
+    private double quantity;
     private BigDecimal unitPrice;
+    private String unitType;
     private BigDecimal discount;
     private BigDecimal total;
 
     public OrderItemDetailTM() {
     }
 
-    public OrderItemDetailTM(String itemCode, String itemName, int quantity, BigDecimal unitPrice, BigDecimal discount, BigDecimal total) {
+    public OrderItemDetailTM(String itemCode, String itemName, double quantity, BigDecimal unitPrice, String unitType, BigDecimal discount, BigDecimal total) {
         this.itemCode = itemCode;
         this.itemName = itemName;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
+        this.unitType = unitType;
         this.discount = discount;
         this.total = total;
     }
-
     public String getItemCode() {
         return itemCode;
     }
@@ -41,11 +40,11 @@ public class OrderItemDetailTM implements Serializable {
         this.itemName = itemName;
     }
 
-    public int getQuantity() {
+    public double getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(double quantity) {
         this.quantity = quantity;
     }
 
@@ -55,6 +54,14 @@ public class OrderItemDetailTM implements Serializable {
 
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public String getUnitType() {
+        return unitType;
+    }
+
+    public void setUnitType(String unitType) {
+        this.unitType = unitType;
     }
 
     public BigDecimal getDiscount() {
@@ -80,6 +87,7 @@ public class OrderItemDetailTM implements Serializable {
                 ", itemName='" + itemName + '\'' +
                 ", quantity=" + quantity +
                 ", unitPrice=" + unitPrice +
+                ", unitType='" + unitType + '\'' +
                 ", discount=" + discount +
                 ", total=" + total +
                 '}';

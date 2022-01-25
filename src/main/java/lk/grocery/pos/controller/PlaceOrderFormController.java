@@ -1,6 +1,5 @@
 package lk.grocery.pos.controller;
 
-import com.fasterxml.jackson.databind.util.ISO8601Utils;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import javafx.animation.Animation;
@@ -34,6 +33,7 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.view.JasperViewer;
 import org.controlsfx.control.textfield.TextFields;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -89,7 +89,7 @@ public class PlaceOrderFormController {
             public void handle(KeyEvent event) {
 
                 if (event.getCode() == KeyCode.ENTER) {
-                    fillItemDetailInField(txtSelectItem.getText().substring(0,4));
+                    fillItemDetailInField(txtSelectItem.getText().substring(0, 4));
                     txtQty.requestFocus();
                 } else if (event.getCode() == KeyCode.SPACE) {
                     txtCustomerCash.requestFocus();
@@ -147,10 +147,11 @@ public class PlaceOrderFormController {
         tblPlaceOrder.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("itemName"));
         tblPlaceOrder.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("quantity"));
         tblPlaceOrder.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
-        tblPlaceOrder.getColumns().get(4).setCellValueFactory(new PropertyValueFactory<>("discount"));
-        tblPlaceOrder.getColumns().get(5).setCellValueFactory(new PropertyValueFactory<>("total"));
+        tblPlaceOrder.getColumns().get(4).setCellValueFactory(new PropertyValueFactory<>("unitType"));
+        tblPlaceOrder.getColumns().get(5).setCellValueFactory(new PropertyValueFactory<>("discount"));
+        tblPlaceOrder.getColumns().get(6).setCellValueFactory(new PropertyValueFactory<>("total"));
 
-        TableColumn<OrderItemDetailTM, Button> deleteBtn = (TableColumn<OrderItemDetailTM, Button>) tblPlaceOrder.getColumns().get(6);
+        TableColumn<OrderItemDetailTM, Button> deleteBtn = (TableColumn<OrderItemDetailTM, Button>) tblPlaceOrder.getColumns().get(7);
 
         deleteBtn.setCellValueFactory(param -> {
             /*System.out.println(param);*/
@@ -238,10 +239,13 @@ public class PlaceOrderFormController {
             currentSelectedItem = new ItemDTO(rstSet.getString("code"),
                     rstSet.getString("description"),
                     rstSet.getBigDecimal("unit_price"),
-                    rstSet.getInt("qty_on_hand"));
+                    rstSet.getInt("qty_on_hand"),
+                    rstSet.getString("unit_type")
+            );
 
             txtItemName.setText(currentSelectedItem.getDescription());
             txtUnitPrice.setText(String.valueOf(currentSelectedItem.getUnitPrice()));
+            txtUnitType.setText(currentSelectedItem.getUnitType());
         } catch (SQLException | ClassNotFoundException e) {
             new Alert(Alert.AlertType.ERROR, "Please enter correct name of the item").show();
             e.printStackTrace();
@@ -290,7 +294,7 @@ public class PlaceOrderFormController {
     }
 
     public boolean validDiscount() {
-        int qty = Integer.parseInt(txtQty.getText());
+        Double qty = Double.parseDouble(txtQty.getText());
         double unitPrice = Double.parseDouble(txtUnitPrice.getText());
         double dis = Double.parseDouble(txtDiscount.getText());
         double itemPrice = unitPrice * qty;
@@ -305,11 +309,24 @@ public class PlaceOrderFormController {
             new Alert(Alert.AlertType.ERROR, "Please enter quantity").show();
             clearAllFields();
             return;
-        } else if (txtQty.getText().trim().matches("^\\d+\\.\\d+") || !(Integer.parseInt(txtQty.getText().trim()) > 0)) {
+        }
+
+        else if(txtQty.getText().trim().contains("abcd") || !(Double.parseDouble(txtQty.getText().trim()) > 0)){
             new Alert(Alert.AlertType.ERROR, "Please enter correct quantity").show();
             clearAllFields();
             return;
-        } else if (new BigDecimal(txtDiscount.getText().trim()).compareTo(BigDecimal.ZERO) < 0) {
+        }
+//        else if (txtQty.getText().trim().matches("^\\d+\\.\\d+") || !(Double.parseDouble(txtQty.getText().trim()) > 0) && txtUnitType.getText().equals("none")) {
+//            new Alert(Alert.AlertType.ERROR, "Please enter correct quantity").show();
+//            clearAllFields();
+//            return;
+//        }
+//        else if (!txtQty.getText().trim().matches("^\\d+\\.\\d+") || !(Double.parseDouble(txtQty.getText().trim()) > 0) && txtUnitType.getText().equals("g") ) {
+//            new Alert(Alert.AlertType.ERROR, "Please enter correct quantity").show();
+//            clearAllFields();
+//            return;
+//        }
+        else if (new BigDecimal(txtDiscount.getText().trim()).compareTo(BigDecimal.ZERO) < 0) {
             new Alert(Alert.AlertType.ERROR, "Please enter correct discount").show();
             clearAllFields();
             return;
@@ -319,13 +336,13 @@ public class PlaceOrderFormController {
             return;
         }
 
-        int rowIndex = isAlreadyExists(txtItemName.getText());
-
+        int rowIndex = isAlreadyExists(currentSelectedItem.getCode());
         if (rowIndex == -1) {
             OrderItemDetailTM orderItem = new OrderItemDetailTM();
             orderItem.setItemCode(currentSelectedItem.getCode());
             orderItem.setItemName(currentSelectedItem.getDescription());
-            orderItem.setQuantity(Integer.parseInt(txtQty.getText().trim()));
+            orderItem.setQuantity(Double.parseDouble(txtQty.getText().trim()));
+            orderItem.setUnitType(currentSelectedItem.getUnitType());
             orderItem.setUnitPrice(currentSelectedItem.getUnitPrice().setScale(2));
             orderItem.setDiscount(new BigDecimal(txtDiscount.getText()).setScale(2));
             orderItem.setTotal(printTotalPerItem(txtQty.getText(),
@@ -336,6 +353,7 @@ public class PlaceOrderFormController {
             tblPlaceOrder.setItems(orderItemList);
             clearAllFields();
         } else {
+            clearAllFields();
             new Alert(Alert.AlertType.WARNING, "The item is already existing", ButtonType.OK).show();
 
         }
@@ -379,8 +397,8 @@ public class PlaceOrderFormController {
             List<PrintBillDetails> billItems = new ArrayList<>();
 
             for (OrderItemDetailTM item : tblPlaceOrder.getItems()) {
-
-                String productDes = "[" + item.getQuantity() + " x " + item.getUnitPrice() + "]";
+                String unitType = item.getUnitType().equals("none") ? " " : item.getUnitType();
+                String productDes = "[" + item.getQuantity() + " " + unitType + " x " + item.getUnitPrice() + "]";
                 if (item.getDiscount().compareTo(BigDecimal.ZERO) > 0) {
                     productDes += " - " + item.getDiscount();
                 }
@@ -397,7 +415,6 @@ public class PlaceOrderFormController {
             params.put("totDis", lblTotalDiscount.getText());
             params.put("cash", customerPaidCash());
             params.put("balance", calculateBalance());
-            params.put("nanayakkaraStoreName", "නානායක්කාර ස්ටොර්ස්");
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(billItems));
             JasperViewer.viewReport(jasperPrint, false);
