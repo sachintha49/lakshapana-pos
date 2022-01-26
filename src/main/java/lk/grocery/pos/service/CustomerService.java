@@ -29,10 +29,11 @@ public class CustomerService {
             if (existCustomer(customerDTO.getId())) {
                 throw new DuplicateIdentifierException(customerDTO.getId() + " already exists");
             }
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO customer (id,name,address) VALUES (?,?,?)");
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO customer (id,name,address,credit_limit) VALUES (?,?,?,?)");
             stmt.setString(1, customerDTO.getId());
             stmt.setString(2, customerDTO.getName());
             stmt.setString(3, customerDTO.getAddress());
+            stmt.setBigDecimal(4, customerDTO.getCreditLimit());
             stmt.executeUpdate();
         } catch (SQLException e) {
             /* methanin yawanne SQL exception ekak nisa meka user karana kattiyata eka wedak nehe eka api therena vidiyen kiyala thiyenawa*/
@@ -54,10 +55,11 @@ public class CustomerService {
             if (!existCustomer(customerDTO.getId())){
                 throw new NotFountException("There is no such customer associated with "+customerDTO.getId());
             }
-            PreparedStatement pstm = connection.prepareStatement("UPDATE customer SET name=?, address=? WHERE id=?");
+            PreparedStatement pstm = connection.prepareStatement("UPDATE customer SET name=?, address=? ,credit_limit = ? WHERE id=?");
             pstm.setString(1,customerDTO.getName());
             pstm.setString(2,customerDTO.getAddress());
-            pstm.setString(3,customerDTO.getId());
+            pstm.setBigDecimal(3,customerDTO.getCreditLimit());
+            pstm.setString(4,customerDTO.getId());
             pstm.executeUpdate();
         } catch (SQLException e) {
             throw new FailedOperationException("Failed to update the customer"+ customerDTO.getId(),e);
@@ -88,7 +90,7 @@ public class CustomerService {
             pstm.setString(1,id);
             ResultSet rst = pstm.executeQuery();
             rst.next();
-            return new CustomerDTO(id,rst.getString("name"),rst.getString("description"));
+            return new CustomerDTO(id,rst.getString("name"),rst.getString("description"),rst.getBigDecimal("credit_limit"));
         } catch (SQLException e) {
             throw new FailedOperationException("Failed to find the customer "+id,e);
         }
@@ -102,7 +104,7 @@ public class CustomerService {
             ResultSet rst = stm.executeQuery("SELECT *  FROM customer");
 
             while (rst.next()){
-                customerList.add(new CustomerDTO(rst.getString("id"),rst.getString("name"),rst.getString("address")));
+                customerList.add(new CustomerDTO(rst.getString("id"),rst.getString("name"),rst.getString("address"),rst.getBigDecimal("credit_limit")));
             }
 
             return customerList;

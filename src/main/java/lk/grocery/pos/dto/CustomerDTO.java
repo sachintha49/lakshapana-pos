@@ -1,19 +1,22 @@
 package lk.grocery.pos.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class CustomerDTO implements Serializable {
     private String id;
     private String name;
     private String address;
+    private BigDecimal creditLimit;
 
     public CustomerDTO() {
     }
 
-    public CustomerDTO(String id, String name, String address) {
+    public CustomerDTO(String id, String name, String address,BigDecimal creditLimit) {
         this.id = id;
         this.name = name;
         this.address = address;
+        this.creditLimit = creditLimit;
     }
 
     public String getId() {
@@ -40,12 +43,21 @@ public class CustomerDTO implements Serializable {
         this.address = address;
     }
 
+    public BigDecimal getCreditLimit() {
+        return creditLimit;
+    }
+
+    public void setCreditLimit(BigDecimal creditLimit) {
+        this.creditLimit = creditLimit;
+    }
+
     @Override
     public String toString() {
         return "CustomerDTO{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
+                ", creditLimit=" + creditLimit +
                 '}';
     }
 }
