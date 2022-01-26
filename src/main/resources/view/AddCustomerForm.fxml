@@ -17,26 +17,27 @@
       <JFXTextField fx:id="txtCustomerId" layoutX="175.0" layoutY="90.0" prefHeight="26.0" prefWidth="549.0" promptText="Customer ID" />
       <JFXTextField fx:id="txtCustomerName" layoutX="175.0" layoutY="135.0" prefHeight="26.0" prefWidth="549.0" promptText="Customer Name" />
       <JFXTextField fx:id="txtCustomerAddress" layoutX="176.0" layoutY="188.0" prefHeight="26.0" prefWidth="549.0" promptText="Customer Address" />
-      <JFXButton fx:id="saveBtnId" layoutX="153.0" layoutY="242.0" onAction="#btnSaveOnAtion" prefHeight="52.0" prefWidth="153.0" style="-fx-border-color: yellow; -fx-background-color: green;" text="Save" textFill="WHITE">
+      <JFXButton fx:id="saveBtnId" layoutX="153.0" layoutY="304.0" onAction="#btnSaveOnAtion" prefHeight="52.0" prefWidth="153.0" style="-fx-border-color: yellow; -fx-background-color: green;" text="Save" textFill="WHITE">
          <font>
             <Font size="20.0" />
          </font>
       </JFXButton>
-      <JFXButton fx:id="deleteBtnId" layoutX="322.0" layoutY="242.0" onAction="#btnDeleteOnAction" prefHeight="52.0" prefWidth="153.0" style="-fx-border-color: blue; -fx-background-color: blue;" text="Delete" textFill="WHITE">
+      <JFXButton fx:id="deleteBtnId" layoutX="322.0" layoutY="303.0" onAction="#btnDeleteOnAction" prefHeight="52.0" prefWidth="153.0" style="-fx-border-color: blue; -fx-background-color: blue;" text="Delete" textFill="WHITE">
          <font>
             <Font size="20.0" />
          </font>
       </JFXButton>
-      <JFXButton fx:id="btnAddNewCustomerID" layoutX="497.0" layoutY="242.0" onAction="#btnAddNewCustomerOnAction" prefHeight="52.0" prefWidth="253.0" style="-fx-border-color: blue; -fx-background-color: purple;" text="Add new Customer +" textFill="WHITE">
+      <JFXButton fx:id="btnAddNewCustomerID" layoutX="497.0" layoutY="302.0" onAction="#btnAddNewCustomerOnAction" prefHeight="52.0" prefWidth="253.0" style="-fx-border-color: blue; -fx-background-color: purple;" text="Add new Customer +" textFill="WHITE">
          <font>
             <Font size="20.0" />
          </font>
       </JFXButton>
-      <TableView fx:id="tblViewCustomer" layoutX="66.0" layoutY="325.0" prefHeight="243.0" prefWidth="768.0">
+      <TableView fx:id="tblViewCustomer" layoutX="66.0" layoutY="390.0" prefHeight="243.0" prefWidth="768.0">
          <columns>
             <TableColumn fx:id="colCustomerId" prefWidth="110.0" text="Customer ID" />
             <TableColumn fx:id="colCustomerName" prefWidth="260.0" text="Customer Name" />
             <TableColumn fx:id="colCustomerAddress" prefWidth="392.0" text="Customer Address" />
+            <TableColumn fx:id="colCustomerCreditLimit" prefWidth="110.0" text="Credit Limit" />
          </columns>
       </TableView>
       <JFXButton layoutX="14.0" layoutY="14.0" onAction="#btnBackFromAddCustomerFormOnAction" prefHeight="52.0" prefWidth="145.0" style="-fx-background-color: red;" text="&lt; Back" textFill="WHITE">
@@ -44,5 +45,6 @@
             <Font size="20.0" />
          </font>
       </JFXButton>
+      <JFXTextField fx:id="txtCustomerCreditLimit" layoutX="176.0" layoutY="241.0" prefHeight="26.0" prefWidth="549.0" promptText="Credit Limit" />
    </children>
 </AnchorPane>

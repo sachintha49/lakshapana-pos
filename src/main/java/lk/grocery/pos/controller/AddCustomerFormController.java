@@ -21,6 +21,7 @@ import lk.grocery.pos.service.CustomerService;
 import lk.grocery.pos.tm.CustomerTM;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.List;
 
@@ -36,6 +37,8 @@ public class AddCustomerFormController {
     public JFXButton saveBtnId;
     public JFXButton deleteBtnId;
     public JFXButton btnAddNewCustomerID;
+    public JFXTextField txtCustomerCreditLimit;
+    public TableColumn colCustomerCreditLimit;
     /* ape class eka purawatama customerService class eka ona nisa methana declare karnawa*/
     CustomerService customerService = new CustomerService();
 
@@ -43,6 +46,7 @@ public class AddCustomerFormController {
         tblViewCustomer.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("id"));
         tblViewCustomer.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("name"));
         tblViewCustomer.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("address"));
+        tblViewCustomer.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("credit_limit"));
 
        /* txtCustomerId.setEditable(false);
         txtCustomerName.setEditable(false);
@@ -63,10 +67,12 @@ public class AddCustomerFormController {
                 txtCustomerId.setText(newValue.getId());
                 txtCustomerName.setText(newValue.getName());
                 txtCustomerAddress.setText(newValue.getAddress());
+                txtCustomerCreditLimit.setText(newValue.getCredit_limit().toString());
 
                 txtCustomerId.setDisable(false);
                 txtCustomerName.setDisable(false);
                 txtCustomerAddress.setDisable(false);
+                txtCustomerCreditLimit.setDisable(false);
 
             }
         });
@@ -90,7 +96,7 @@ public class AddCustomerFormController {
             tblViewCustomer.setItems(FXCollections.observableList(customers));*/
 
             /* eka piyawarakin agahannath puuwan*/
-            customerService.findAllCustomer().forEach(dto -> tblViewCustomer.getItems().add(new CustomerTM(dto.getId(),dto.getName(),dto.getAddress())));
+            customerService.findAllCustomer().forEach(dto -> tblViewCustomer.getItems().add(new CustomerTM(dto.getId(),dto.getName(),dto.getAddress(),dto.getCreditLimit().setScale(2))));
         } catch (FailedOperationException e) {
             new Alert(Alert.AlertType.ERROR,e.getMessage()).show();
             throw e;
@@ -108,9 +114,11 @@ public class AddCustomerFormController {
     }
 
     public void btnSaveOnAtion(ActionEvent actionEvent) throws FailedOperationException {
+
         String id = txtCustomerId.getText();
         String name = txtCustomerName.getText();
         String address = txtCustomerAddress.getText();
+        String creditLimit = txtCustomerCreditLimit.getText().equals("") ? "0.00" : txtCustomerCreditLimit.getText();
 
         /* Regular expression eken kiyanne: capital A to Z and simple a - z akuru thiyenne puluwan saha space thiyenne puluwan and aduma tharame eka akurak hari thiyenna one*/
         if (!name.matches("[A-Za-z ]+")) {
@@ -127,8 +135,8 @@ public class AddCustomerFormController {
             if (saveBtnId.getText().equalsIgnoreCase("Save")) {
                 /* Todo: we need to save this in our database first then only the table should be updated */
                 try {
-                    customerService.saveCustomer(new CustomerDTO(id,name,address));
-                    tblViewCustomer.getItems().add(new CustomerTM(id, name, address));
+                    customerService.saveCustomer(new CustomerDTO(id,name,address,new BigDecimal(creditLimit)));
+                    tblViewCustomer.getItems().add(new CustomerTM(id, name, address,new BigDecimal(creditLimit)));
                 } catch (DuplicateIdentifierException e) {
                     new Alert(Alert.AlertType.ERROR,e.getMessage()).show();
                 }
@@ -136,10 +144,11 @@ public class AddCustomerFormController {
                 /* Todo: first of all we need to update the DB, if that success */
 
                 try {
-                    customerService.updateCustomer(new CustomerDTO(id,name,address));
+                    customerService.updateCustomer(new CustomerDTO(id,name,address,new BigDecimal(creditLimit)));
                     CustomerTM selectedItem = tblViewCustomer.getSelectionModel().getSelectedItem();
                     selectedItem.setName(name);
                     selectedItem.setAddress(address);
+                    selectedItem.setCredit_limit(new BigDecimal(creditLimit));
                     tblViewCustomer.refresh();
                 } catch (FailedOperationException e) {
                     e.printStackTrace();
@@ -177,10 +186,12 @@ public class AddCustomerFormController {
         txtCustomerId.clear();
         txtCustomerName.clear();
         txtCustomerAddress.clear();
+        txtCustomerCreditLimit.clear();
 
         txtCustomerId.setDisable(true);
         txtCustomerName.setDisable(true);
         txtCustomerAddress.setDisable(true);
+        txtCustomerCreditLimit.setDisable(true);
 
         txtCustomerId.setEditable(false);
         saveBtnId.setDisable(true);
@@ -193,11 +204,13 @@ public class AddCustomerFormController {
         txtCustomerId.setText(generateNewId());
         txtCustomerName.clear();
         txtCustomerAddress.clear();
+        txtCustomerCreditLimit.clear();
         txtCustomerName.requestFocus();
         saveBtnId.setText("Save");
 
         txtCustomerName.setDisable(false);
         txtCustomerAddress.setDisable(false);
+        txtCustomerCreditLimit.setDisable(false);
 
         saveBtnId.setDisable(false);
 
