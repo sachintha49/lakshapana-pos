@@ -23,10 +23,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import lk.grocery.pos.dto.CustomerDTO;
+import lk.grocery.pos.exception.FailedOperationException;
+import lk.grocery.pos.service.CustomerService;
 import lk.grocery.pos.util.PrintBillDetails;
 import lk.grocery.pos.db.DBConnection;
 import lk.grocery.pos.dto.ItemDTO;
 import lk.grocery.pos.tm.OrderItemDetailTM;
+import lk.grocery.pos.util.PrintCreditBillDetails;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -81,9 +84,10 @@ public class PlaceOrderFormController {
 
     ItemDTO currentSelectedItem;
     ObservableList<OrderItemDetailTM> orderItemList = FXCollections.observableArrayList();
-
+    CustomerService customerService = new CustomerService();
 
     public void initialize() {
+        txtCustomerCash.setText("0");
         cmbCashOrCredit.getItems().addAll("CASH", "CREDIT");
         cmbCashOrCredit.getSelectionModel().selectFirst();
         txtSelectCustomer.setDisable(true);
@@ -459,7 +463,7 @@ public class PlaceOrderFormController {
         return dateString;
     }
 
-    public void placeOrderBtnOnAction(ActionEvent actionEvent) throws JRException {
+    public void placeOrderBtnOnAction(ActionEvent actionEvent) throws JRException, FailedOperationException {
         /* this if condition works according to the CASH or CREDIT combo box */
         if (cmbCashOrCredit.getSelectionModel().getSelectedItem() == "CASH") {
             if (txtCustomerCash.getText().trim().isEmpty()) {
@@ -508,9 +512,48 @@ public class PlaceOrderFormController {
                 return;
             }
         } else {
-            System.out.println("Credit eka select une eka poddak balapan");
+            String customerCode = txtSelectCustomer.getText().substring(0,4);
+            BigDecimal netAmount = new BigDecimal(lblTotalPriceOfOrder.getText());
+            if(!txtCustomerCash.getText().trim().isEmpty()){
+                BigDecimal cashAmount = new BigDecimal(txtCustomerCash.getText().trim());
+                netAmount = netAmount.subtract(cashAmount);
+            }
+            BigDecimal totalCreditLimit = customerService.updateCustomerCreditLimit(customerCode, netAmount);
+
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to print this?", ButtonType.YES, ButtonType.CANCEL);
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.YES) {
+                List<PrintBillDetails> billItems = new ArrayList<>();
+
+                for (OrderItemDetailTM item : tblPlaceOrder.getItems()) {
+                    String unitType = item.getUnitType().equals("none") ? " " : item.getUnitType();
+                    String productDes = "[" + item.getQuantity() + " " + unitType + " x " + item.getUnitPrice() + "]";
+                    if (item.getDiscount().compareTo(BigDecimal.ZERO) > 0) {
+                        productDes += " - " + item.getDiscount();
+                    }
+
+                    billItems.add(new PrintBillDetails(item.getItemName(), item.getItemCode(), productDes, item.getTotal()));
+                }
+                JasperDesign jasperDesign = JRXmlLoader.load(this.getClass().getResourceAsStream("/report/credit-bill.jrxml"));
+                JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
 
 
+                Map<String, Object> params = new HashMap<>();
+                params.put("currentDate", javaDateFormat());
+                params.put("grossTot", lblGrossAmount.getText());
+                params.put("totDis", lblTotalDiscount.getText());
+                params.put("cash", customerPaidCash());
+                params.put("balance", calculateBalance());
+                params.put("customerName", lblSelectedCustomer.getText());
+                params.put("creditLimit", netAmount);
+                params.put("totCreditLimit", totalCreditLimit);
+
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(billItems));
+                JasperViewer.viewReport(jasperPrint, false);
+                //JasperPrintManager.printReport(jasperPrint, false);
+
+                //tblPlaceOrder.getItems().clear();
+            }
         }
 
 

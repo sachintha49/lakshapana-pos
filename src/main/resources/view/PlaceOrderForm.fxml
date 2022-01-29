@@ -11,7 +11,6 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="870.0" prefWidth="1366.0" style="-fx-background-color: white;" styleClass="placeOrderImage" stylesheets="@style/place-order.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.grocery.pos.controller.PlaceOrderFormController">
@@ -20,7 +19,7 @@
          <font>
             <Font name="Serif Bold" size="36.0" />
          </font></Label>
-      <Button fx:id="btnAddItem" layoutX="918.0" layoutY="431.0" mnemonicParsing="false" onAction="#btnAddItemToBillOnAtion" prefHeight="57.0" prefWidth="170.0" style="-fx-background-color: #2e8b57;" text="Add Item" textFill="WHITE">
+      <Button fx:id="btnAddItem" layoutX="497.0" layoutY="310.0" mnemonicParsing="false" onAction="#btnAddItemToBillOnAtion" prefHeight="57.0" prefWidth="170.0" style="-fx-background-color: #2e8b57;" text="Add Item" textFill="WHITE">
          <font>
             <Font name="System Bold" size="24.0" />
          </font>
@@ -28,30 +27,29 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <TableView fx:id="tblPlaceOrder" layoutX="23.0" layoutY="506.0" prefHeight="232.0" prefWidth="1065.0">
-        <columns>
-          <TableColumn fx:id="colItemCode" prefWidth="87.0" text="Item Code" />
-          <TableColumn fx:id="colItemName" prefWidth="216.0" text="Item Name" />
+      <TableView fx:id="tblPlaceOrder" layoutX="68.0" layoutY="380.0" prefHeight="241.0" prefWidth="1027.0">
+         <columns>
+            <TableColumn fx:id="colItemCode" prefWidth="87.0" text="Item Code" />
+            <TableColumn fx:id="colItemName" prefWidth="216.0" text="Item Name" />
             <TableColumn fx:id="colQty" prefWidth="89.0" text="Qty." />
             <TableColumn fx:id="colUnitPrice" prefWidth="133.0" text="Unit Price" />
             <TableColumn fx:id="colUnitType" prefWidth="127.0" text="Unit Type" />
             <TableColumn fx:id="colDiscount" prefWidth="131.0" text="Discount" />
             <TableColumn fx:id="colTotal" prefWidth="153.0" text="Total" />
             <TableColumn fx:id="colDeleteBtn" prefWidth="125.0" text="Delete" />
-        </columns>
+         </columns>
       </TableView>
-      <Line endX="618.0" layoutX="158.0" layoutY="198.0" opacity="0.15" startX="-100.0" />
-      <Label layoutX="26.0" layoutY="822.0" text="NET AMOUNT       :">
+      <Label layoutX="852.0" layoutY="274.0" text="NET AMOUNT       :">
          <font>
             <Font name="Serif Regular" size="22.0" />
          </font>
       </Label>
-      <Label fx:id="lblTotalPriceOfOrder" layoutX="279.0" layoutY="822.0" text="00.00">
+      <Label fx:id="lblTotalPriceOfOrder" layoutX="1149.0" layoutY="274.0" text="00.00">
          <font>
             <Font name="Serif Regular" size="22.0" />
          </font>
       </Label>
-      <Button fx:id="btnPlaceOrder" layoutX="836.0" layoutY="755.0" mnemonicParsing="false" onAction="#placeOrderBtnOnAction" prefHeight="85.0" prefWidth="256.0" style="-fx-background-color: #dc143c;" text="Place Order" textFill="WHITE">
+      <Button fx:id="btnPlaceOrder" layoutX="1103.0" layoutY="380.0" mnemonicParsing="false" onAction="#placeOrderBtnOnAction" prefHeight="85.0" prefWidth="256.0" style="-fx-background-color: #dc143c;" text="Place Order" textFill="WHITE">
          <font>
             <Font name="System Bold Italic" size="24.0" />
          </font>
@@ -72,41 +70,40 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <Label layoutX="25.0" layoutY="746.0" prefHeight="36.0" prefWidth="223.0" text="GROSS AMOUNT  :">
+      <Label layoutX="846.0" layoutY="183.0" prefHeight="36.0" prefWidth="223.0" text="GROSS AMOUNT  :">
          <font>
             <Font name="Serif Regular" size="22.0" />
          </font>
       </Label>
-      <Label fx:id="lblGrossAmount" layoutX="276.0" layoutY="754.0" text="00.00">
+      <Label fx:id="lblGrossAmount" layoutX="1148.0" layoutY="190.0" text="00.00">
          <font>
             <Font name="Serif Regular" size="22.0" />
          </font>
       </Label>
-      <Label layoutX="23.0" layoutY="786.0" text="TOTAL DISCOUNT :">
+      <Label layoutX="847.0" layoutY="230.0" text="TOTAL DISCOUNT :">
          <font>
             <Font name="Serif Regular" size="22.0" />
          </font>
       </Label>
-      <Label fx:id="lblTotalDiscount" layoutX="276.0" layoutY="786.0" text="00.00">
+      <Label fx:id="lblTotalDiscount" layoutX="1149.0" layoutY="230.0" text="00.00">
          <font>
             <Font name="Serif Regular" size="22.0" />
          </font>
       </Label>
-      <Line endX="618.0" layoutX="134.0" layoutY="375.0" opacity="0.15" startX="-100.0" />
-      <JFXButton fx:id="btnRefreshID" layoutX="26.0" layoutY="435.0" onAction="#btnRefreshOnAction" prefHeight="57.0" prefWidth="170.0" style="-fx-background-color: yellow;" text="Refresh">
+      <JFXButton fx:id="btnRefreshID" layoutX="71.0" layoutY="310.0" onAction="#btnRefreshOnAction" prefHeight="57.0" prefWidth="170.0" style="-fx-background-color: yellow;" text="Refresh">
          <font>
             <Font name="Lohit Telugu" size="12.0" />
          </font>
       </JFXButton>
-      <TextField fx:id="txtUnitType" layoutX="640.0" layoutY="226.0" prefHeight="26.0" prefWidth="92.0" />
-      <TextField fx:id="txtSelectItem" alignment="TOP_CENTER" layoutX="43.0" layoutY="226.0" prefHeight="26.0" prefWidth="583.0" promptText="Search Item" />
-      <TextField fx:id="txtUnitPrice" layoutX="472.0" layoutY="274.0" promptText="Unit Price" />
-      <TextField fx:id="txtItemName" layoutX="64.0" layoutY="274.0" promptText="Item Name" />
-      <TextField fx:id="txtDiscount" layoutX="428.0" layoutY="340.0" promptText="Discount" />
-      <TextField fx:id="txtQty" layoutX="64.0" layoutY="340.0" promptText="Qty" />
-      <TextField fx:id="txtCustomerCash" layoutX="63.0" layoutY="396.0" promptText="Cash" />
-      <ComboBox fx:id="cmbCashOrCredit" layoutX="46.0" layoutY="80.0" prefHeight="36.0" prefWidth="204.0" promptText="Cash | Credit" />
-      <TextField fx:id="txtSelectCustomer" alignment="TOP_CENTER" layoutX="48.0" layoutY="150.0" prefHeight="26.0" prefWidth="583.0" promptText="Search Customer" />
+      <TextField fx:id="txtUnitType" layoutX="666.0" layoutY="120.0" prefHeight="26.0" prefWidth="92.0" />
+      <TextField fx:id="txtSelectItem" alignment="TOP_CENTER" layoutX="72.0" layoutY="120.0" prefHeight="26.0" prefWidth="583.0" promptText="Search Item" />
+      <TextField fx:id="txtUnitPrice" layoutX="506.0" layoutY="170.0" promptText="Unit Price" />
+      <TextField fx:id="txtItemName" layoutX="71.0" layoutY="170.0" promptText="Item Name" />
+      <TextField fx:id="txtDiscount" layoutX="506.0" layoutY="217.0" promptText="Discount" />
+      <TextField fx:id="txtQty" layoutX="71.0" layoutY="217.0" promptText="Qty" />
+      <TextField fx:id="txtCustomerCash" layoutX="71.0" layoutY="263.0" promptText="Cash" />
+      <ComboBox fx:id="cmbCashOrCredit" layoutX="72.0" layoutY="17.0" prefHeight="36.0" prefWidth="204.0" promptText="Cash | Credit" />
+      <TextField fx:id="txtSelectCustomer" alignment="TOP_CENTER" layoutX="72.0" layoutY="74.0" prefHeight="26.0" prefWidth="583.0" promptText="Search Customer" />
       <Label layoutX="846.0" layoutY="35.0" prefHeight="36.0" prefWidth="223.0" text="Customer Name :">
          <font>
             <Font name="Serif Regular" size="22.0" />

@@ -7,6 +7,7 @@ import lk.grocery.pos.exception.FailedOperationException;
 import lk.grocery.pos.exception.NotFountException;
 
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,12 @@ public class CustomerService {
         return pstm.executeQuery().next();
     }
 
+    public ResultSet customerLimit(String id) throws SQLException {
+        PreparedStatement pstm = connection.prepareStatement("SELECT credit_limit FROM customer WHERE id=?");
+        pstm.setString(1, id);
+        return pstm.executeQuery();
+    }
+
     public void updateCustomer(CustomerDTO customerDTO) throws FailedOperationException, NotFountException {
 
         try {
@@ -64,6 +71,35 @@ public class CustomerService {
         } catch (SQLException e) {
             throw new FailedOperationException("Failed to update the customer"+ customerDTO.getId(),e);
         }
+
+    }
+
+    public BigDecimal updateCustomerCreditLimit(String customerCode, BigDecimal creditLimit) throws FailedOperationException {
+        try {
+            if (!existCustomer(customerCode)) {
+                throw new NotFountException("There is no such customer associated with " + customerCode);
+            }
+            ResultSet rs= customerLimit(customerCode);
+            BigDecimal limit = null;
+
+            while (rs.next()){
+                 limit = rs.getBigDecimal("credit_limit");
+            }
+
+            BigDecimal calc;
+            calc = limit.add(creditLimit);
+
+            System.out.println(calc);
+            PreparedStatement pstm = connection.prepareStatement("UPDATE customer SET credit_limit = ? WHERE id=?");
+            pstm.setBigDecimal(1,calc);
+            pstm.setString(2,customerCode);
+            pstm.executeUpdate();
+            return calc;
+        }
+        catch (SQLException | NotFountException e) {
+            throw new FailedOperationException("Failed to update the customer"+ customerCode,e);
+        }
+
 
     }
 
