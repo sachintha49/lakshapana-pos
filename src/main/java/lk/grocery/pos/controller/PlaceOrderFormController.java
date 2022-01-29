@@ -22,6 +22,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import lk.grocery.pos.dto.CustomerDTO;
 import lk.grocery.pos.util.PrintBillDetails;
 import lk.grocery.pos.db.DBConnection;
 import lk.grocery.pos.dto.ItemDTO;
@@ -33,6 +34,7 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.view.JasperViewer;
 import org.controlsfx.control.textfield.TextFields;
 
+import javax.swing.*;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -47,7 +49,7 @@ import java.util.*;
 public class PlaceOrderFormController {
     /*public TextField text;*/
     public AnchorPane root;
-    public JFXTextField txtSelectItem;
+    public TextField txtSelectItem;
     public Button txtAddAItemToBill;
     public TableView<OrderItemDetailTM> tblPlaceOrder;
     public TableColumn colItemCode;
@@ -56,28 +58,61 @@ public class PlaceOrderFormController {
     public TableColumn colUnitPrice;
     public TableColumn colTotal;
     public TableColumn colDeleteBtn;
-    public JFXTextField txtQty;
-    public JFXTextField txtUnitPrice;
+    public TextField txtQty;
+    public TextField txtUnitPrice;
     public Label lblTotalPriceOfOrder;
     public Label lblOrderDate;
     public Label lblOrderId;
-    public JFXTextField txtItemName;
+    public TextField txtItemName;
     public Button btnAddItem;
     public TableColumn colDiscount;
-    public JFXTextField txtDiscount;
+    public TextField txtDiscount;
     public Button btnPlaceOrder;
     public Label lblGrossAmount;
     public Label lblTotalDiscount;
-    public JFXTextField txtCustomerCash;
+    public TextField txtCustomerCash;
     public JFXButton btnRefreshID;
     public TextField txtUnitType;
     public TableColumn colUnitType;
+    public ComboBox cmbCashOrCredit;
+    public TextField txtSelectCustomer;
+    public Label lblSelectedCustomer;
+    public Label lblCustomerCreditLimit;
 
     ItemDTO currentSelectedItem;
     ObservableList<OrderItemDetailTM> orderItemList = FXCollections.observableArrayList();
 
 
     public void initialize() {
+        cmbCashOrCredit.getItems().addAll("CASH", "CREDIT");
+        cmbCashOrCredit.getSelectionModel().selectFirst();
+        txtSelectCustomer.setDisable(true);
+
+        cmbCashOrCredit.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == "CASH") {
+                txtSelectCustomer.setDisable(true);
+            } else {
+                txtSelectCustomer.setDisable(false);
+            }
+        });
+
+
+        /* Select customer from the database with auto completion text box */
+        final List<String> customers = getCustomerDetail();
+
+        TextFields.bindAutoCompletion(txtSelectCustomer, customers);
+
+        txtSelectCustomer.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+
+                if (event.getCode() == KeyCode.ENTER) {
+                    fillCustomerDetailInLebal(txtSelectCustomer.getText().substring(0, 4));
+                }
+            }
+        });
+
+
         /* Autocomplete text box implementation*/
         final List<String> hitProducts = getHitProducts();
 
@@ -163,7 +198,7 @@ public class PlaceOrderFormController {
                 calculateTotal();
                 calculateGrossAmount();
                 calculateTotalDiscount();
-//                enableOrDisablePlaceOrderButton();
+                //                enableOrDisablePlaceOrderButton();
             });
 
             return new ReadOnlyObjectWrapper<>(btnDelete);
@@ -178,10 +213,10 @@ public class PlaceOrderFormController {
                 txtQty.setText(String.valueOf(selectedOrderDetail.getQuantity()));
                 txtUnitPrice.setText(String.valueOf(selectedOrderDetail.getUnitPrice()));
             } else {
-               /* btnSave.setText("Add");
-                cmbItemCode.setDisable(false);
-                cmbItemCode.getSelectionModel().clearSelection();
-                txtQty.clear();*/
+                   /* btnSave.setText("Add");
+                    cmbItemCode.setDisable(false);
+                    cmbItemCode.getSelectionModel().clearSelection();
+                    txtQty.clear();*/
             }
 
         });
@@ -195,12 +230,59 @@ public class PlaceOrderFormController {
 
     }
 
-    private int isAlreadyExists(String itemCode) {
-        /*for (PlaceOrderTM tm : tableTm){
-            if (itemCode.equals(tm.getCode())){
-                return 1;
+
+    public void fillCustomerDetailInLebal(String cusId) {
+        if (cusId.isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "Please check the input is correct", ButtonType.OK).show();
+            return;
+        }
+        try {
+            final PreparedStatement prst = DBConnection.getInstance().getConnection().prepareStatement("SELECT * FROM customer WHERE id = ?");
+            prst.setString(1, cusId);
+            ResultSet rstSet = prst.executeQuery();
+            rstSet.next();
+
+            String name = rstSet.getString("name");
+            String credit = rstSet.getString("credit_limit");
+
+            lblSelectedCustomer.setText(name);
+            lblCustomerCreditLimit.setText(credit);
+        } catch (SQLException | ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Please enter correct id of the customer").show();
+            e.printStackTrace();
+        }
+
+    }
+
+    /* ***************************************************************/
+    private List<String> getCustomerDetail() {
+        List<String> customerList = new ArrayList<>();
+        try {
+            PreparedStatement pstm = DBConnection.getInstance().getConnection().prepareStatement("SELECT * FROM customer");
+            ResultSet rst = pstm.executeQuery();
+            while (rst.next()) {
+                String id = rst.getString("id");
+                String name = rst.getString("name");
+                String credit = rst.getString("credit_limit");
+                customerList.add(id + " " + name + " " + credit);
             }
-        }*/
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        //        List<String> list = ProductService.getSearchProduct(keyword);
+
+        return customerList;
+    }
+
+    private int isAlreadyExists(String itemCode) {
+            /*for (PlaceOrderTM tm : tableTm){
+                if (itemCode.equals(tm.getCode())){
+                    return 1;
+                }
+            }*/
         for (int i = 0; i < orderItemList.size(); i++) {
             if (itemCode.equals(orderItemList.get(i).getItemCode())) {
                 return i;
@@ -269,7 +351,7 @@ public class PlaceOrderFormController {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-//        List<String> list = ProductService.getSearchProduct(keyword);
+        //        List<String> list = ProductService.getSearchProduct(keyword);
 
         return list;
     }
@@ -309,23 +391,21 @@ public class PlaceOrderFormController {
             new Alert(Alert.AlertType.ERROR, "Please enter quantity").show();
             clearAllFields();
             return;
-        }
-
-        else if(txtQty.getText().trim().contains("abcd") || !(Double.parseDouble(txtQty.getText().trim()) > 0)){
+        } else if (txtQty.getText().trim().contains("abcd") || !(Double.parseDouble(txtQty.getText().trim()) > 0)) {
             new Alert(Alert.AlertType.ERROR, "Please enter correct quantity").show();
             clearAllFields();
             return;
         }
-//        else if (txtQty.getText().trim().matches("^\\d+\\.\\d+") || !(Double.parseDouble(txtQty.getText().trim()) > 0) && txtUnitType.getText().equals("none")) {
-//            new Alert(Alert.AlertType.ERROR, "Please enter correct quantity").show();
-//            clearAllFields();
-//            return;
-//        }
-//        else if (!txtQty.getText().trim().matches("^\\d+\\.\\d+") || !(Double.parseDouble(txtQty.getText().trim()) > 0) && txtUnitType.getText().equals("g") ) {
-//            new Alert(Alert.AlertType.ERROR, "Please enter correct quantity").show();
-//            clearAllFields();
-//            return;
-//        }
+        //        else if (txtQty.getText().trim().matches("^\\d+\\.\\d+") || !(Double.parseDouble(txtQty.getText().trim()) > 0) && txtUnitType.getText().equals("none")) {
+        //            new Alert(Alert.AlertType.ERROR, "Please enter correct quantity").show();
+        //            clearAllFields();
+        //            return;
+        //        }
+        //        else if (!txtQty.getText().trim().matches("^\\d+\\.\\d+") || !(Double.parseDouble(txtQty.getText().trim()) > 0) && txtUnitType.getText().equals("g") ) {
+        //            new Alert(Alert.AlertType.ERROR, "Please enter correct quantity").show();
+        //            clearAllFields();
+        //            return;
+        //        }
         else if (new BigDecimal(txtDiscount.getText().trim()).compareTo(BigDecimal.ZERO) < 0) {
             new Alert(Alert.AlertType.ERROR, "Please enter correct discount").show();
             clearAllFields();
@@ -347,7 +427,7 @@ public class PlaceOrderFormController {
             orderItem.setDiscount(new BigDecimal(txtDiscount.getText()).setScale(2));
             orderItem.setTotal(printTotalPerItem(txtQty.getText(),
                     String.valueOf(currentSelectedItem.getUnitPrice()), Double.parseDouble(txtDiscount.getText())));
-//            String itemCode, String itemName, int quantity, BigDecimal unitPrice, double discount, BigDecimal total
+            //            String itemCode, String itemName, int quantity, BigDecimal unitPrice, double discount, BigDecimal total
             orderItemList.add(orderItem);
 
             tblPlaceOrder.setItems(orderItemList);
@@ -380,51 +460,59 @@ public class PlaceOrderFormController {
     }
 
     public void placeOrderBtnOnAction(ActionEvent actionEvent) throws JRException {
-        if (txtCustomerCash.getText().trim().isEmpty()) {
-            new Alert(Alert.AlertType.WARNING, "Please enter given cash!", ButtonType.OK).show();
-            return;
-        }
-        BigDecimal customerCash = new BigDecimal(txtCustomerCash.getText().trim());
-        BigDecimal netAmount = new BigDecimal(lblTotalPriceOfOrder.getText());
-        if ((netAmount.compareTo(customerCash) == 1) && !(netAmount.compareTo(customerCash) == 0)) {
-            new Alert(Alert.AlertType.WARNING, "Ask customer more money", ButtonType.OK).show();
-            return;
-        }
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to print this?", ButtonType.YES, ButtonType.CANCEL);
-        alert.showAndWait();
-
-        if (alert.getResult() == ButtonType.YES) {
-            List<PrintBillDetails> billItems = new ArrayList<>();
-
-            for (OrderItemDetailTM item : tblPlaceOrder.getItems()) {
-                String unitType = item.getUnitType().equals("none") ? " " : item.getUnitType();
-                String productDes = "[" + item.getQuantity() + " " + unitType + " x " + item.getUnitPrice() + "]";
-                if (item.getDiscount().compareTo(BigDecimal.ZERO) > 0) {
-                    productDes += " - " + item.getDiscount();
-                }
-
-                billItems.add(new PrintBillDetails(item.getItemName(), item.getItemCode(), productDes, item.getTotal()));
+        /* this if condition works according to the CASH or CREDIT combo box */
+        if (cmbCashOrCredit.getSelectionModel().getSelectedItem() == "CASH") {
+            if (txtCustomerCash.getText().trim().isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "Please enter given cash!", ButtonType.OK).show();
+                return;
             }
-            JasperDesign jasperDesign = JRXmlLoader.load(this.getClass().getResourceAsStream("/report/pos-bill.jrxml"));
-            JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
+            BigDecimal customerCash = new BigDecimal(txtCustomerCash.getText().trim());
+            BigDecimal netAmount = new BigDecimal(lblTotalPriceOfOrder.getText());
+            if ((netAmount.compareTo(customerCash) == 1) && !(netAmount.compareTo(customerCash) == 0)) {
+                new Alert(Alert.AlertType.WARNING, "Ask customer more money", ButtonType.OK).show();
+                return;
+            }
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to print this?", ButtonType.YES, ButtonType.CANCEL);
+            alert.showAndWait();
+
+            if (alert.getResult() == ButtonType.YES) {
+                List<PrintBillDetails> billItems = new ArrayList<>();
+
+                for (OrderItemDetailTM item : tblPlaceOrder.getItems()) {
+                    String unitType = item.getUnitType().equals("none") ? " " : item.getUnitType();
+                    String productDes = "[" + item.getQuantity() + " " + unitType + " x " + item.getUnitPrice() + "]";
+                    if (item.getDiscount().compareTo(BigDecimal.ZERO) > 0) {
+                        productDes += " - " + item.getDiscount();
+                    }
+
+                    billItems.add(new PrintBillDetails(item.getItemName(), item.getItemCode(), productDes, item.getTotal()));
+                }
+                JasperDesign jasperDesign = JRXmlLoader.load(this.getClass().getResourceAsStream("/report/pos-bill.jrxml"));
+                JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
 
 
-            Map<String, Object> params = new HashMap<>();
-            params.put("currentDate", javaDateFormat());
-            params.put("grossTot", lblGrossAmount.getText());
-            params.put("totDis", lblTotalDiscount.getText());
-            params.put("cash", customerPaidCash());
-            params.put("balance", calculateBalance());
+                Map<String, Object> params = new HashMap<>();
+                params.put("currentDate", javaDateFormat());
+                params.put("grossTot", lblGrossAmount.getText());
+                params.put("totDis", lblTotalDiscount.getText());
+                params.put("cash", customerPaidCash());
+                params.put("balance", calculateBalance());
 
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(billItems));
-            JasperViewer.viewReport(jasperPrint, false);
-            //JasperPrintManager.printReport(jasperPrint, false);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(billItems));
+                JasperViewer.viewReport(jasperPrint, false);
+                //JasperPrintManager.printReport(jasperPrint, false);
 
-            //tblPlaceOrder.getItems().clear();
-        } else if (alert.getResult() == ButtonType.CANCEL) {
-            System.out.println("return una");
-            return;
+                //tblPlaceOrder.getItems().clear();
+            } else if (alert.getResult() == ButtonType.CANCEL) {
+                System.out.println("return una");
+                return;
+            }
+        } else {
+            System.out.println("Credit eka select une eka poddak balapan");
+
+
         }
+
 
     }
 
