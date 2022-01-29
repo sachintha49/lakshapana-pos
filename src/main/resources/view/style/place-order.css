@@ -1,7 +1,7 @@
 .placeOrderImage {
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
-    -fx-background-image: url("/assests/placeOrder.jpg");
+     /*-fx-background-image: url("/assests/placeOrder.jpg");*/
     /*-fx-background-size: 900,700;*/
 }
 
