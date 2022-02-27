@@ -22,7 +22,7 @@ public class AppInitializer extends Application {
         Scene mainScene = new Scene(root);
         primaryStage.setScene(mainScene);
         //stage.setResizable(false);
-        primaryStage.setTitle("Nanayakkara POS");
+        primaryStage.setTitle("Kudos Technologies POS");
         primaryStage.centerOnScreen();
 
         primaryStage.show();

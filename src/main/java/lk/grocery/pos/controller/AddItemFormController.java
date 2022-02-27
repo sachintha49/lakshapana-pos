@@ -15,7 +15,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import lk.grocery.pos.exception.DuplicateIdentifierException;
@@ -24,17 +23,18 @@ import lk.grocery.pos.dto.ItemDTO;
 import lk.grocery.pos.exception.FailedOperationException;
 import lk.grocery.pos.service.ItemService;
 import lk.grocery.pos.tm.ItemTM;
-import org.jfree.ui.ExtensionFileFilter;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.math.BigDecimal;
-import java.net.URI;
 import java.net.URL;
-import java.sql.Blob;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.*;
 
 public class AddItemFormController {
     public AnchorPane root;
@@ -54,9 +54,10 @@ public class AddItemFormController {
     public TableColumn colUnitType;
     public ImageView imageView;
     public JFXButton btnImage;
-    public Blob filePath;
     public int fileLength;
     public TableColumn colImagePath;
+    public String FilePath;
+    public File imagePath;
 
     /* ape class eka purawatama customerService class eka ona nisa methana declare karnawa*/
     ItemService itemService = new ItemService();
@@ -68,7 +69,7 @@ public class AddItemFormController {
         tblViewItem.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("unit_price"));
         tblViewItem.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("qty_on_hand"));
         tblViewItem.getColumns().get(4).setCellValueFactory(new PropertyValueFactory<>("unit_type"));
-        tblViewItem.getColumns().get(5).setCellValueFactory(new PropertyValueFactory<>("image_path"));
+        tblViewItem.getColumns().get(5).setCellValueFactory(new PropertyValueFactory<>("filePath"));
 
         imageFile = new ArrayList<>();
         imageFile.add("*.png");
@@ -98,10 +99,27 @@ public class AddItemFormController {
                 txtItemUnitPrice.setText(String.valueOf(newValue.getUnit_price()));
                 txtQuantityOnHand.setText(String.valueOf(newValue.getQty_on_hand()));
                 cmbUnitType.setValue(newValue.getUnit_type());
+                FileInputStream fileInputStream = null;
+                try {
+                    if(newValue.getFilePath() != null){
+                        fileInputStream = new FileInputStream(newValue.getFilePath());
+                    }
+                   else {
+                        imageView.setImage(null);
+                        return;
+                    }
+                } catch (FileNotFoundException | NullPointerException e) {
+                    e.printStackTrace();
+                }
+                Image image = new Image(fileInputStream);
+                imageView.setImage(image);
+
+
                 txtItemCode.setDisable(false);
                 txtItemDescription.setDisable(false);
                 txtItemUnitPrice.setDisable(false);
                 txtQuantityOnHand.setDisable(false);
+                btnImage.setDisable(false);
 
             }
         });
@@ -110,7 +128,7 @@ public class AddItemFormController {
 
         loadAllItem();
 
-        cmbUnitType.getItems().addAll("none","Kg","l");
+        cmbUnitType.getItems().addAll("none", "Kg", "l");
         cmbUnitType.getSelectionModel().selectFirst();
     }
 
@@ -130,9 +148,10 @@ public class AddItemFormController {
             /* eka piyawarakin agahannath puuwan*/
             List<ItemDTO> listItem = itemService.findAllItems();
             listItem.forEach(dto -> tblViewItem.getItems().add(new ItemTM(dto.getCode(),
-                    dto.getDescription(),dto.getUnitPrice().setScale(2),dto.getQtyOnHand(),dto.getUnitType())));
+                    dto.getDescription(), dto.getUnitPrice().setScale(2), dto.getQtyOnHand(), dto.getUnitType(),dto.getFilePath())));
+
         } catch (FailedOperationException e) {
-            new Alert(Alert.AlertType.ERROR,e.getMessage()).show();
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
             throw e;
         }
     }
@@ -147,7 +166,7 @@ public class AddItemFormController {
         Platform.runLater(() -> primaryStage.sizeToScene());
     }
 
-    public void btnSaveOnAtion(ActionEvent actionEvent) throws FailedOperationException, FileNotFoundException {
+    public void btnSaveOnAtion(ActionEvent actionEvent) throws FailedOperationException, IOException {
         String code = txtItemCode.getText();
         String unitType = cmbUnitType.getSelectionModel().getSelectedItem().toString();
         String description = txtItemDescription.getText();
@@ -164,27 +183,43 @@ public class AddItemFormController {
             txtCustomerAddress.requestFocus();
             return;
         }*/
+        BufferedImage bImage = ImageIO.read(imagePath);
+        String imageType = StringUtils.substringAfterLast(imagePath.getName(), ".");
+        Random r = new Random();
+        int randomNumber = r.nextInt(100000);
+
+        try {
+            Path rootDIr = Paths.get(".").normalize().toAbsolutePath();
+            File directoryPath =  new File(rootDIr + "/src/main/resources/assests/itemImages/" + randomNumber + "." + imageType);
+            boolean jpg = ImageIO.write(bImage, imageType ,directoryPath);
+
+            if (jpg) {
+                FilePath = directoryPath.toString();
+            }
+
+        } catch (IOException e) {
+            System.out.println("Exception occured :" + e.getMessage());
+        }
 
         try {
             if (saveBtnId.getText().equalsIgnoreCase("Save")) {
                 /* Todo: we need to save this in our database first then only the table should be updated */
                 try {
-                    System.out.println(filePath + " filepath");
-                    itemService.saveItem(new ItemDTO(code,description,new BigDecimal(unitPrice),Integer.parseInt(qtyOnHand),unitType));
-                    tblViewItem.getItems().add(new ItemTM(code, description, new BigDecimal(unitPrice),Integer.parseInt(qtyOnHand),unitType));
+                    itemService.saveItem(new ItemDTO(code, description, new BigDecimal(unitPrice), Integer.parseInt(qtyOnHand), unitType, FilePath));
+                    tblViewItem.getItems().add(new ItemTM(code, description, new BigDecimal(unitPrice), Integer.parseInt(qtyOnHand), unitType, FilePath));
                 } catch (DuplicateIdentifierException e) {
-                    new Alert(Alert.AlertType.ERROR,e.getMessage()).show();
+                    new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
                 }
             } else {
                 /* Todo: first of all we need to update the DB, if that success */
-
                 try {
-                    itemService.updateItem(new ItemDTO(code, description, new BigDecimal(unitPrice),Integer.parseInt(qtyOnHand),unitType));
+                    itemService.updateItem(new ItemDTO(code, description, new BigDecimal(unitPrice), Integer.parseInt(qtyOnHand), unitType, FilePath));
                     ItemTM selectedItem = tblViewItem.getSelectionModel().getSelectedItem();
                     selectedItem.setDescription(description);
                     selectedItem.setUnit_price(new BigDecimal(unitPrice));
                     selectedItem.setQty_on_hand(Integer.parseInt(qtyOnHand));
                     selectedItem.setUnit_type(unitType);
+                    selectedItem.setFilePath(FilePath);
                     tblViewItem.refresh();
                 } catch (FailedOperationException e) {
                     e.printStackTrace();
@@ -195,8 +230,8 @@ public class AddItemFormController {
 
 
             }
-        }catch (FailedOperationException e){
-            new Alert(Alert.AlertType.ERROR,e.getMessage()).show();
+        } catch (FailedOperationException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
             throw e;
         }
 
@@ -205,7 +240,7 @@ public class AddItemFormController {
 
     public void btnDeleteOnAction(ActionEvent actionEvent) throws FailedOperationException {
 
-        try{
+        try {
             itemService.deleteItem(tblViewItem.getSelectionModel().getSelectedItem().getCode());
             tblViewItem.getItems().remove(tblViewItem.getSelectionModel().getSelectedItem());
             tblViewItem.getSelectionModel().clearSelection();
@@ -213,7 +248,7 @@ public class AddItemFormController {
         } catch (NotFountException e) {
             e.printStackTrace(); /* This never gonna be happen with our UI design thiayana ekkenekma thama delte karanne nisa*/
         } catch (FailedOperationException e) {
-            new Alert(Alert.AlertType.ERROR,e.getMessage()).show();
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
             throw e;
         }
     }
@@ -223,6 +258,7 @@ public class AddItemFormController {
         txtItemDescription.clear();
         txtItemUnitPrice.clear();
         txtQuantityOnHand.clear();
+        imageView.setImage(null);
 
         txtItemCode.setDisable(true);
         txtItemDescription.setDisable(true);
@@ -232,6 +268,7 @@ public class AddItemFormController {
         txtItemCode.setEditable(false);
         saveBtnId.setDisable(true);
         deleteBtnId.setDisable(true);
+        btnImage.setDisable(true);
 
     }
 
@@ -249,6 +286,8 @@ public class AddItemFormController {
         txtQuantityOnHand.setDisable(false);
 
         saveBtnId.setDisable(false);
+        btnImage.setDisable(false);
+        imageView.setImage(null);
 
         tblViewItem.getSelectionModel().clearSelection();
         txtItemDescription.requestFocus();
@@ -258,7 +297,7 @@ public class AddItemFormController {
         try {
             return itemService.generateNewItemId();
         } catch (FailedOperationException e) {
-            new Alert(Alert.AlertType.ERROR,e.getMessage()).show();
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
             throw e;
         }
       /*  if (tblViewCustomer.getItems().isEmpty()) {
@@ -272,17 +311,13 @@ public class AddItemFormController {
             return String.format("C%03d", newCustomerID);*/
     }
 
-    public void btnSingleImage(ActionEvent actionEvent) throws IOException {
+    public void btnSingleImage(ActionEvent actionEvent){
+
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("image files", imageFile));
-        File f = fc.showOpenDialog(null);
-        if(f != null){
-            Image image = new Image(f.toURI().toString());
-            if (filePath == null) {
-                fileLength = (int) f.length();
-                //filePath = f.toURI().getPath();
-                System.out.println(filePath);
-            }
+        imagePath = fc.showOpenDialog(null);
+        if (imagePath != null) {
+            Image image = new Image(imagePath.toURI().toString());
             imageView.setImage(image);
         }
 

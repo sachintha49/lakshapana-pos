@@ -12,16 +12,18 @@ public class ItemDTO implements Serializable {
     private BigDecimal unitPrice;
     private int qtyOnHand;
     private String unitType;
+    private String filePath;
 
     public ItemDTO() {
     }
 
-    public ItemDTO(String code, String description, BigDecimal unitPrice, int qtyOnHand, String unitType) {
+    public ItemDTO(String code, String description, BigDecimal unitPrice, int qtyOnHand, String unitType, String filePath) {
         this.code = code;
         this.description = description;
         this.unitPrice = unitPrice;
         this.qtyOnHand = qtyOnHand;
         this.unitType = unitType;
+        this.filePath = filePath;
     }
 
     @Override
@@ -32,6 +34,7 @@ public class ItemDTO implements Serializable {
                 ", unitPrice=" + unitPrice +
                 ", qtyOnHand=" + qtyOnHand +
                 ", unitType='" + unitType + '\'' +
+                ", filePath=" + filePath +
                 '}';
     }
 
@@ -73,5 +76,13 @@ public class ItemDTO implements Serializable {
 
     public void setUnitType(String unitType) {
         this.unitType = unitType;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }

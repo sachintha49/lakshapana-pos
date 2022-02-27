@@ -28,12 +28,13 @@ public class ItemService {
             if (existItem(itemDTO.getCode())) {
                 throw new DuplicateIdentifierException(itemDTO.getCode() + " already exists");
             }
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO item (code,description,unit_price,qty_on_hand,unit_type) VALUES (?,?,?,?,?)");
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO item (code,description,unit_price,qty_on_hand,unit_type,image_path) VALUES (?,?,?,?,?,?)");
             stmt.setString(1, itemDTO.getCode());
             stmt.setString(2, itemDTO.getDescription());
             stmt.setBigDecimal(3, itemDTO.getUnitPrice());
             stmt.setInt(4, itemDTO.getQtyOnHand());
             stmt.setString(5,itemDTO.getUnitType());
+            stmt.setString(6, itemDTO.getFilePath());
             stmt.executeUpdate();
         } catch (SQLException e) {
             /* methanin yawanne SQL exception ekak nisa meka user karana kattiyata eka wedak nehe eka api therena vidiyen kiyala thiyenawa*/
@@ -55,12 +56,13 @@ public class ItemService {
             if (!existItem(itemDTO.getCode())){
                 throw new NotFountException("There is no such item associated with "+itemDTO.getCode());
             }
-            PreparedStatement pstm = connection.prepareStatement("UPDATE item SET description=?, unit_price=?, qty_on_hand=?, unit_type=? WHERE code=?");
+            PreparedStatement pstm = connection.prepareStatement("UPDATE item SET description=?, unit_price=?, qty_on_hand=?, unit_type=?, image_path=? WHERE code=?");
             pstm.setString(1,itemDTO.getDescription());
             pstm.setBigDecimal(2,itemDTO.getUnitPrice());
             pstm.setInt(3,itemDTO.getQtyOnHand());
             pstm.setString(4,itemDTO.getUnitType());
-            pstm.setString(5,itemDTO.getCode());
+            pstm.setString(5,itemDTO.getFilePath());
+            pstm.setString(6,itemDTO.getCode());
             pstm.executeUpdate();
         } catch (SQLException e) {
             throw new FailedOperationException("Failed to update the item"+ itemDTO.getCode(),e);
@@ -92,7 +94,7 @@ public class ItemService {
             pstm.setString(1,code);
             ResultSet rst = pstm.executeQuery();
             rst.next();
-            return new ItemDTO(code,rst.getString("description"),rst.getBigDecimal("unit_price"),rst.getInt("qty_on_hand"),rst.getString("unit_type"));
+            return new ItemDTO(code,rst.getString("description"),rst.getBigDecimal("unit_price"),rst.getInt("qty_on_hand"),rst.getString("unit_type"), rst.getString("image_path"));
         } catch (SQLException e) {
             throw new FailedOperationException("Failed to find the item "+code,e);
         }
@@ -106,7 +108,7 @@ public class ItemService {
             ResultSet rst = stm.executeQuery("SELECT *  FROM item");
 
             while (rst.next()){
-               itemList.add(new ItemDTO(rst.getString("code"),rst.getString("description"),rst.getBigDecimal("unit_price"),rst.getInt("qty_on_hand"),rst.getString("unit_type")));
+                itemList.add(new ItemDTO(rst.getString("code"),rst.getString("description"),rst.getBigDecimal("unit_price"),rst.getInt("qty_on_hand"),rst.getString("unit_type"), rst.getString("image_path")));
             }
 
             return itemList;
