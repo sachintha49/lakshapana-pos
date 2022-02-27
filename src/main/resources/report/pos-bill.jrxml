@@ -58,9 +58,9 @@
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="015fcfb9-9249-419d-aeae-f9e9e36f2b3f"/>
 				</reportElement>
 				<textElement textAlignment="Center">
-					<font fontName="Iskoola Pota" size="12" isBold="true"/>
+					<font fontName="Iskoola Pota" size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[කුඹුරුහේන ලක්ෂපාන]]></text>
+				<text><![CDATA[Southern Expressway Service Area, Welipenna]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="-6" y="41" width="200" height="12" uuid="c1d62ee0-4b5d-44cb-8ae1-6a6d9c747548">
@@ -70,7 +70,7 @@
 				<textElement textAlignment="Center">
 					<font fontName="Iskoola Pota" size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[ටෙලි : 0512232332]]></text>
+				<text><![CDATA[Tel : 0774543966]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="-7" y="0" width="201" height="30" uuid="8e35e6de-55b3-45e9-b4cc-65bdcb50649d">
@@ -78,9 +78,9 @@
 					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
 				</reportElement>
 				<textElement textAlignment="Center">
-					<font fontName="Iskoola Pota" size="22" isBold="true"/>
+					<font fontName="Iskoola Pota" size="18" isBold="true"/>
 				</textElement>
-				<text><![CDATA[නානායක්කාර ස්ටොර්ස්]]></text>
+				<text><![CDATA[Tarragon94 Restaurant]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -262,7 +262,6 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
-				<text><![CDATA[For Exchanges-Please Produce This bill  within 7 Days]]></text>
 			</staticText>
 		</band>
 	</columnFooter>

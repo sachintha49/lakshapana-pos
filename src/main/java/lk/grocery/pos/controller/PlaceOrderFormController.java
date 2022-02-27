@@ -240,7 +240,8 @@ public class PlaceOrderFormController {
                     rstSet.getString("description"),
                     rstSet.getBigDecimal("unit_price"),
                     rstSet.getInt("qty_on_hand"),
-                    rstSet.getString("unit_type")
+                    rstSet.getString("unit_type"),
+                     rstSet.getString("image_path")
             );
 
             txtItemName.setText(currentSelectedItem.getDescription());
